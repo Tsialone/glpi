@@ -1,0 +1,32 @@
+/* --- Styles Généraux --- */
+a {
+  text-decoration: none; /* Optionnel : enlève le soulignement */
+  transition: color 0.3s ease;
+}
+
+/* --- Mode Clair (par défaut) --- */
+body {
+  background-color: white;
+  color: black;
+}
+body a {
+  color: #007bff; /* Un bleu plus moderne */
+}
+
+/* --- Mode Sombre --- */
+body.dark-mode {
+  background-color: #333334;
+  color: white;
+}
+
+body.dark-mode a {
+  color: #8ab4f8; /* Un bleu pastel/clair qui ressort bien sur le gris */
+}
+
+body.dark-mode a:visited {
+  color: #d1d1d1; /* Évite le violet, on met un gris clair pour les liens visités */
+}
+
+body.dark-mode a:hover {
+  color: #ffffff; /* Devient blanc pur au survol */
+}

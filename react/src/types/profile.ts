@@ -1,0 +1,132 @@
+export interface IProfile {
+    id: number;
+    name: string | null;
+    interface: string | null;
+    is_default: number;
+    helpdesk_hardware: number;
+    /** 
+     * In the API this is often returned as a stringified JSON array 
+     * e.g. "[\"Computer\",\"Monitor\"]"
+     */
+    helpdesk_item_type: string | null;
+    use_mentions: number;
+    ticket_status: string | null;
+    date_mod: string | null;
+    comment: string | null;
+    problem_status: string | null;
+    create_ticket_on_login: number;
+    tickettemplates_id: number;
+    changetemplates_id: number;
+    problemtemplates_id: number;
+    change_status: string | null;
+    /**
+     * In the API this is often returned as a stringified JSON array 
+     * e.g. "[]"
+     */
+    managed_domainrecordtypes: string | null;
+    date_creation: string | null;
+    "2fa_enforced": number;
+    last_rights_update: string | null;
+    agent: number;
+    appliance: number;
+    backup: number;
+    bookmark_public: number;
+    budget: number;
+    cable_management: number;
+    calendar: number;
+    cartridge: number;
+    certificate: number;
+    change: number;
+    changevalidation: number;
+    cluster: number;
+    computer: number;
+    config: number;
+    consumable: number;
+    contact_enterprise: number;
+    contract: number;
+    dashboard: number;
+    database: number;
+    datacenter: number;
+    device: number;
+    devicesimcard_pinpuk: number;
+    document: number;
+    domain: number;
+    dropdown: number;
+    entity: number;
+    externalevent: number;
+    followup: number;
+    form: number;
+    global_validation: number;
+    group: number;
+    infocom: number;
+    internet: number;
+    inventory: number;
+    itilcategory: number;
+    itilfollowuptemplate: number;
+    itiltemplate: number;
+    itilvalidationtemplate: number;
+    knowbase: number;
+    knowbasecategory: number;
+    license: number;
+    line: number;
+    lineoperator: number;
+    link: number;
+    location: number;
+    locked_field: number;
+    logs: number;
+    monitor: number;
+    networking: number;
+    notification: number;
+    oauth_client: number;
+    password_update: number;
+    pendingreason: number;
+    peripheral: number;
+    personalization: number;
+    phone: number;
+    planning: number;
+    printer: number;
+    problem: number;
+    profile: number;
+    project: number;
+    projecttask: number;
+    queuednotification: number;
+    recurrentchange: number;
+    refusedequipment: number;
+    reminder_public: number;
+    reports: number;
+    reservation: number;
+    rssfeed_public: number;
+    rule_asset: number;
+    rule_dictionnary_dropdown: number;
+    rule_dictionnary_printer: number;
+    rule_dictionnary_software: number;
+    rule_import: number;
+    rule_ldap: number;
+    rule_location: number;
+    rule_mailcollector: number;
+    rule_softwarecategories: number;
+    rule_ticket: number;
+    search_config: number;
+    show_group_hardware: number;
+    slm: number;
+    snmpcredential: number;
+    software: number;
+    solutiontemplate: number;
+    state: number;
+    statistic: number;
+    system_logs: number;
+    task: number;
+    taskcategory: number;
+    tasktemplate: number;
+    ticket: number;
+    ticketcost: number;
+    ticketrecurrent: number;
+    ticketvalidation: number;
+    transfer: number;
+    typedoc: number;
+    unmanaged: number;
+    user: number;
+    
+    // Kept for backward compatibility
+    mfa_enforced?: boolean;
+}
