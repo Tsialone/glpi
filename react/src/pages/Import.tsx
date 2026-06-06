@@ -180,6 +180,7 @@ export default function Import() {
             if (ticketFile) {
                 console.log("Parsing tickets...");
                 const tickeImport = await ticketsImportService.getByCsv(ticketFile);
+                await ticketsImportService.doImport (tickeImport);
                 console.log(tickeImport);
             }
 

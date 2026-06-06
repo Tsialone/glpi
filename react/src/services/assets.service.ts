@@ -14,13 +14,13 @@ import { documentItemService } from "./document-item.service";
 
 class AssetsService extends MethodeService {
     async createsByAssetImport(assetImports: IAssetImport[]): Promise<void> {
-        const [users, itemModels, states, locations, manufacturers , documents] = await Promise.all([
+        const [users, itemModels, states, locations, manufacturers, documents] = await Promise.all([
             userService.getAll(),
             itemModelService.getAll(),
             itemStateService.getAll(),
             locationService.getAll(),
             manufacturerService.getAll(),
-            documentService.getAll() 
+            documentService.getAll()
         ]);
         for (const assetImport of assetImports) {
             const idState = states.find(s => s.name === assetImport.status)?.id ?? 0;
@@ -65,8 +65,26 @@ class AssetsService extends MethodeService {
 
 
     }
-    async getAll<T extends IAsset = IAsset>(itemType: string) {
-        return await this.get<T[]>(itemType);
+    async getItempTypeById<T extends IAsset = IAsset>(idItem: number): Promise<string | null> {
+        for (const itemType of ITEM_TYPE) {
+            const items = await this.get<T[]>(itemType);
+            const item = items.find(i => i.id === idItem);
+            if (item) return itemType;
+        }
+        return null;
+    }
+    async getAll<T extends IAsset = IAsset>(itemType?: string): Promise<T[]> {
+        if (itemType) {
+            return await this.get<T[]>(itemType);
+        }
+        else {
+            const assetPromises = ITEM_TYPE.map(it => {
+                return this.get<T[]>(it);
+            });
+            const resp = (await Promise.all(assetPromises)).flat();
+            return resp;
+
+        }
     }
 
     async getById<T extends IAsset = IAsset>(itemType: string, id: number) {

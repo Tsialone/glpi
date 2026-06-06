@@ -2,12 +2,15 @@ import { assetsService } from "./assets.service";
 import { documentService } from "./document.service";
 import { itemModelService } from "./item-model.service";
 import { itemStateService } from "./item-state.service";
+import { itemTicketService } from "./item-ticket.service";
 import { locationService } from "./location.service";
 import { manufacturerService } from "./manufacturer.service";
+import { ticketService } from "./ticket.service";
 import { userService } from "./user.service";
 
 class ResetService {
     async resetAll() {
+        // fichier 1
         await assetsService.purge();
         await itemStateService.purge ();
         await locationService.purge ();
@@ -15,6 +18,11 @@ class ResetService {
         await itemModelService.purge ();
         await userService.purge ();
         await documentService.purge ();
+
+
+        // fichier 2
+        await ticketService.purge ();
+        await itemTicketService.purge ();
 
     }
 }

@@ -2,18 +2,22 @@ import type { LocalFile } from "papaparse";
 import type { ITicketImport } from "../../types/import/tickets-import";
 import { makeImport } from "../../functions/csv";
 import { DateTime } from "luxon";
-import { parseDate } from "../../utils/parse.util";
+import { ticketService } from "../ticket.service";
+import { itemTicketService } from "../item-ticket.service";
 
 class TicketsImportService {
     csvHeaders: string[] = ["ref_ticket", "date", "heure", "type", "titre", "description", "status", "priority", "items"];
 
-
-    parseCsv = async (products: ITicketImport[]): Promise<ITicketImport[]> => {
+    async doImport (ticketImports :   ITicketImport[]){
+        await ticketService.createsByTicketImport (ticketImports);
+        await itemTicketService.createsByTicketImport (ticketImports);   
+    }
+    parseCsv = async (ticketImports: ITicketImport[]): Promise<ITicketImport[]> => {
         let resp: ITicketImport[] = [];
-        if (products instanceof Array) {
-            for (const product of products) {
+        if (ticketImports instanceof Array) {
+            for (const ticketImport of ticketImports) {
                 const temp: ITicketImport = {
-                    ...product
+                    ...ticketImport
                 };
                 temp.items_array = [...new Set(this.parseItems(temp.items))];
                 resp.push(temp);
