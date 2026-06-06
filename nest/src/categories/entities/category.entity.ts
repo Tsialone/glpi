@@ -10,7 +10,7 @@ export class Category {
     name!: string
 
     @CreateDateColumn ({type:"datetime"})
-    created: Date = new Date ();
+    created: Date = new Date ();    
 
     @OneToMany (()=> Article , (article) => article.category )
     articles!:Article []

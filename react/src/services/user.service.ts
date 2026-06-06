@@ -1,18 +1,39 @@
 import axios from "axios";
 import type { IUser } from "../types/auth/user";
-import { baseUrl, UTIL_CONST } from "../utils";
+import { APP_TOKEN, baseUrl, UTIL_CONST } from "../utils";
 import { MethodeService } from "./methode.service";
 import type { IProfile } from "../types/profile";
 import { profileService } from "./profile.service";
 import { profileUserService } from "./profile-user.service";
 import { apiClient } from "../utils/api";
+import type { IAssetImport } from "../types/import/assets-import";
 
 class UserService extends MethodeService {
     private endpoint = "User";
+    async createsByAssetImport(assetImports: IAssetImport[]): Promise<void> {
+        const userNames = [...new Set(assetImports.filter(ai => ai.user != undefined || ai.user != null).map(ai => {
+            if (ai.user) {
+                return ai.user.trim();
+            }
+        }))];
+        console.log(userNames);
+
+        for (const userName of userNames) {
+            const user: Partial<IUser> = {
+                name: userName,
+                realname: userName,
+                password2: userName,
+                password: userName,
+                api_token: userName,
+            }
+
+            await this.create(user);
+        }
+    }
     async logout() {
-        await  apiClient.get ("/killSession");
-        localStorage.removeItem (UTIL_CONST.user);
-        localStorage.removeItem (UTIL_CONST.token);
+        await apiClient.get("/killSession");
+        localStorage.removeItem(UTIL_CONST.user);
+        localStorage.removeItem(UTIL_CONST.token);
     }
     async getProfilesById(idUser: number): Promise<IProfile[]> {
         const profile_users_ids = (await profileUserService.getByIdUser(idUser)).map(pu => pu.profiles_id);
@@ -25,7 +46,7 @@ class UserService extends MethodeService {
             baseURL: baseUrl,
             timeout: 10000,
             headers: {
-                'App-Token': 'CN8On4dDB1WTwZVGc7n4M9KVp6FocA1gz8PfrghH',
+                'App-Token': APP_TOKEN,
                 'Accept': 'application/json',
                 'Authorization': `Basic ${base64Encoded}`
             }
@@ -73,7 +94,8 @@ class UserService extends MethodeService {
         return await this.del(this.endpoint, id, false);
     }
 
-    async purge(ids: number[]) {
+    async purge() {
+        const ids = (await this.getAll()).filter(u => u.id != 2 && u.id != 6).map(u => u.id);
         return await this.reset(this.endpoint, ids);
     }
 }

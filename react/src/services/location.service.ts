@@ -6,7 +6,7 @@ class LocationService extends MethodeService {
     private endpoint = "Location";
 
     createByIAssetImport = async (assetImports: IAssetImport[]): Promise<void> => {
-        const locationNames = [...new Set(assetImports.map(ai => ai.location.trim()))];
+        const locationNames = [...new Set(assetImports.filter(ai => ai.location).map(ai => ai.location.trim()))];
         for (const locationName of locationNames) {
             const location: Partial<ILocation> = {
                 name: locationName,
@@ -33,7 +33,7 @@ class LocationService extends MethodeService {
     }
 
     async delete(id: number) {
-        return await this.del(this.endpoint, id, false);
+        return await this.del(this.endpoint, id);
     }
 
     async purge() {

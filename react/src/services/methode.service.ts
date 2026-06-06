@@ -12,7 +12,8 @@ export class MethodeService {
 
     async get<T = any>(url: string): Promise<T> {
         try {
-            const result = await this.defaultApiClient.get<T>(url);
+            const newUrl = url.includes("?") ? `${url}&range=0-99999999` : `${url}?range=0-99999999`;
+            const result = await this.defaultApiClient.get<T>(newUrl);
             return result.data;
         } catch (error: any) {
             if (error.response?.data) {
@@ -22,9 +23,9 @@ export class MethodeService {
         }
     }
 
-    async del(endPoint: string, id: number, force: boolean = true) {
+    async del(endPoint: string, id: number, force: number = 1) {
         try {
-            await this.defaultApiClient.delete(`${endPoint}/${id}?force=${force}`);
+            await this.defaultApiClient.delete(`${endPoint}/${id}?force_purge=${force}`);
         } catch (error: any) {
             if (error.response?.data) {
                 const data = error.response.data;
@@ -41,13 +42,14 @@ export class MethodeService {
     //     }
     // }
     async reset(endPoints: string, ids: number[]) {
-        const promises = ids.map(id => this.del(endPoints, id));
+
+        const promises = ids.map(id => this.del(`${endPoints}`, id));
         await Promise.all(promises);
     }
 
     async post<T = any>(endPoint: string, body: T) {
         try {
-            const realBody = {"input" : body};  
+            const realBody = { "input": body };
             const result = await this.defaultApiClient.post(endPoint, realBody);
             return result.data;
         } catch (error: any) {

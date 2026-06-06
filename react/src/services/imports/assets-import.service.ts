@@ -5,15 +5,24 @@ import { itemStateService } from "../item-state.service";
 import { locationService } from "../location.service";
 import { manufacturerService } from "../manufacturer.service";
 import { itemModelService } from "../item-model.service";
+import { userService } from "../user.service";
+import type { ExtractedImage } from "../../utils/upload.util";
+import { documentService } from "../document.service";
+import { assetsService } from "../assets.service";
 
 class AssetsImportService {
     csvHeaders: string[] = ["name", "status", "location", "manufacturer", "item_type", "model", "inventory_number", "user"];
 
-    async doImport(assetsImport: IAssetImport[]) {
+    async doImport(assetsImport: IAssetImport[] , extractedImages : ExtractedImage []) {
         await itemStateService.createsByAssetImport(assetsImport);
         await locationService.createByIAssetImport(assetsImport);
-        await manufacturerService.createsByAssetImport (assetsImport);
-        await itemModelService.createsByAssetImport (assetsImport);
+        await manufacturerService.createsByAssetImport(assetsImport);
+        await itemModelService.createsByAssetImport(assetsImport);
+        await userService.createsByAssetImport(assetsImport);
+        await documentService.createsByextractedImages (extractedImages);
+
+        // insertion finale
+        await assetsService.createsByAssetImport (assetsImport);
     }
     async getByCsv(file: LocalFile) {
         try {
