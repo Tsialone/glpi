@@ -1,9 +1,9 @@
 import axios from "axios";
-import { baseUrl, nestBaseUrl, UTIL_CONST } from "./const.util";
+import { APP_TOKEN, baseUrl, nestBaseUrl, UTIL_CONST } from "./const.util";
 
 export const nestApiClient = axios.create({
     baseURL: nestBaseUrl,
-    timeout: 10000,
+    timeout: 50000,
     headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json'
@@ -12,7 +12,7 @@ export const nestApiClient = axios.create({
 
 export const apiClient = axios.create({
     baseURL: baseUrl,
-    timeout: 10000,
+    timeout: 50000,
     headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json'
@@ -22,7 +22,7 @@ apiClient.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem(UTIL_CONST.token);
         if (token) {
-            config.headers["App-Token"] = 'CN8On4dDB1WTwZVGc7n4M9KVp6FocA1gz8PfrghH';
+            config.headers["App-Token"] = APP_TOKEN;
             config.headers["Session-Token"] = token;
             // console.log ("xxx: ",config);
         }

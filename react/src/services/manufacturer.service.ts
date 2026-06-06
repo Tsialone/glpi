@@ -6,7 +6,7 @@ class ManufacturerService extends MethodeService {
     private endpoint = "Manufacturer";
 
     async createsByAssetImport(assetImports: IAssetImport[]): Promise<void> {
-        const manufacturerNames = [...new Set(assetImports.map(ai => ai.manufacturer.trim()))];
+        const manufacturerNames = [...new Set(assetImports.filter (ai=> ai.manufacturer).map(ai => ai.manufacturer.trim()))];
         for (const manufacturerName of manufacturerNames) {
             const manufacturer: Partial<IManufacturer> = {
                 name: manufacturerName,
@@ -31,7 +31,7 @@ class ManufacturerService extends MethodeService {
     }
 
     async delete(id: number) {
-        return await this.del(this.endpoint, id, false);
+        return await this.del(this.endpoint, id);
     }
 
     async purge() {

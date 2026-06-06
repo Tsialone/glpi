@@ -6,11 +6,26 @@ class ItemStateService extends MethodeService {
     private endpoint = "State";
 
     async createsByAssetImport(assetImports: IAssetImport[]): Promise<void> {
-        const statusNames = [...new Set(assetImports.map(ai => ai.status.trim()))];
+        const statusNames = [...new Set(assetImports.filter(ai => ai.status).map(ai => ai.status.trim()))];
         for (const statusName of statusNames) {
-            const status: Partial<IItemState> = {
+            const status: Partial<IItemState | any> = {
                 name: statusName,
-                completename: statusName
+                completename: statusName,
+
+                // rendre visible pour tout le monde
+                "is_visible_computer": 1,
+                "is_visible_monitor": 1,
+                "is_visible_networkequipment": 1,
+                "is_visible_peripheral": 1,
+                "is_visible_phone": 1,
+                "is_visible_printer": 1,
+                "is_visible_softwareversion": 1,
+                "is_visible_rack": 1,
+                "is_visible_enclosure": 1,
+                "is_visible_pdu": 1,
+                "is_visible_passivedcequipment": 1,
+                "is_visible_cable": 1,
+                "is_visible_simcard": 1,
             }
             await this.create(status);
         }
@@ -33,7 +48,7 @@ class ItemStateService extends MethodeService {
     }
 
     async delete(id: number) {
-        return await this.del(this.endpoint, id, false);
+        return await this.del(this.endpoint, id);
     }
 
     async purge() {

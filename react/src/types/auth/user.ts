@@ -124,4 +124,10 @@ export interface IUser {
     default_entity?: IUserDefaultEntity | null;
     title?: string | null;
     category?: string | null;
+
+
+    //for sign
+    password?:string,
+    password2?:string,
+    api_token?:string
 }

@@ -173,7 +173,7 @@ export default function Import() {
             if (assetFile) {
                 console.log("Parsing assets...");
                 const assetImport = await assetsImportService.getByCsv(assetFile);
-                await assetsImportService.doImport(assetImport);
+                await assetsImportService.doImport(assetImport, extracted ?? []);
                 console.log(assetImport);
             }
 
