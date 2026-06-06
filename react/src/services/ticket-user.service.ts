@@ -21,7 +21,7 @@ class TicketUserService extends MethodeService {
     }
 
     async delete(id: number) {
-        return await this.del(this.endpoint, id, false);
+        return await this.del(this.endpoint, id);
     }
 
     async purge() {

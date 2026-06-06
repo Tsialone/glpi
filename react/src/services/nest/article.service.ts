@@ -1,5 +1,5 @@
+import type { INArticle } from "../../types/nest/article";
 import { nestApiClient } from "../../utils/api";
-import type { INArticle } from "../../utils/nest/article";
 import { MethodeService } from "../methode.service";
 
 class ArticleService extends MethodeService {
@@ -27,7 +27,7 @@ class ArticleService extends MethodeService {
     }
 
     async delete(id: number) {
-        return await this.del(this.endpoint, id, false);
+        return await this.del(this.endpoint, id);
     }
 
     async purge(ids: number[]) {

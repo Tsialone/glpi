@@ -1,9 +1,33 @@
+import { DateTime } from "luxon";
+import type { ITicketImport } from "../types/import/tickets-import";
 import type { ITicket } from "../types/ticket";
 import { MethodeService } from "./methode.service";
+import { REVERSE_TICKET_PRIORITY, REVERSE_TICKET_STATUS, REVERSE_TICKET_TYPES, TICKET_TYPES } from "../utils";
 
 class TicketService extends MethodeService {
     private endpoint = "Ticket";
-
+    async createsByTicketImport(ticketImports: ITicketImport[]): Promise<void> {
+        for (const ticketImport of ticketImports) {
+            const dateStr = `${ticketImport.date} ${ticketImport.heure}:00`;
+            const date = DateTime.fromFormat(dateStr, "dd/MM/yyyy HH:mm:ss");
+            if (!date.isValid) throw new Error(`Date non valide: ${dateStr}`);
+            const ticket: Partial<ITicket> = {
+                date: date.toFormat("yyyy-MM-dd HH:mm:ss"),
+                type: REVERSE_TICKET_TYPES[ticketImport.type],
+                name: ticketImport.titre,
+                content: ticketImport.description,
+                status: REVERSE_TICKET_STATUS["New"],
+                priority: REVERSE_TICKET_PRIORITY[ticketImport.priority.toLowerCase()],
+                externalid: ticketImport.ref_ticket
+            }
+            console.log("creation ticket: ", ticket);
+            // console.log ("hisPriorityId: " , REVERSE_TICKET_PRIORITY[ticketImport.priority] ,  "hisPriorityImport: " ,  ticketImport.priority.toLowerCase());
+            await this.create(ticket);
+        }
+    }
+    async modfiy(data: Partial<ITicket>) {
+        return await this.patch(this.endpoint, data)
+    }
     async getAll() {
         return await this.get<ITicket[]>(this.endpoint);
     }
@@ -21,7 +45,7 @@ class TicketService extends MethodeService {
     }
 
     async delete(id: number) {
-        return await this.del(this.endpoint, id, false);
+        return await this.del(this.endpoint, id);
     }
 
     async purge() {

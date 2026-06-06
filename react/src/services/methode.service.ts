@@ -79,7 +79,8 @@ export class MethodeService {
 
     async patch<T = any>(endPoint: string, body: T) {
         try {
-            const result = await this.defaultApiClient.patch(endPoint, body);
+            const realBody = { "input": body };
+            const result = await this.defaultApiClient.patch(endPoint, realBody);
             return result.data;
         } catch (error: any) {
             if (error.response?.data) {
