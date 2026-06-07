@@ -1,6 +1,6 @@
 import React, { useRef, useState, type JSX } from "react";
 import type { ITicket } from "../../types/ticket";
-import { ITEM_TYPE, REVERSE_TICKET_PRIORITY, REVERSE_TICKET_TYPES, TICKET_PRIORITY } from "../../utils";
+import { ITEM_TYPE, REVERSE_TICKET_PRIORITY, REVERSE_TICKET_STATUS, REVERSE_TICKET_TYPES, TICKET_PRIORITY } from "../../utils";
 import type { IItemTicket } from "../../types/item-ticket";
 import { el } from "date-fns/locale";
 import type { IAsset } from "../../types/assets";
@@ -13,19 +13,19 @@ export default function TicketSaisie() {
     const [itemTicket, setItemTicket] = useState<Partial<IItemTicket | undefined>>();
     const [assets, setAssets] = useState<IAsset[]>([]);
     const [itemTickets, setItemTickets] = useState<Partial<IItemTicket>[]>([]);
-    const mapItemName = useRef<Record<number , string>> ({});
+    const mapItemName = useRef<Record<number, string>>({});
     async function handleCreate() {
         console.log(ticket);
-        console.log (itemTickets);
-        const resp = await ticketService.create (ticket);
-        if (resp?.id){
+        console.log(itemTickets);
+        const resp = await ticketService.create(ticket);
+        if (resp?.id) {
             const idTicket = resp.id;
             for (const itemTicket of itemTickets) {
-                    itemTicket.tickets_id = idTicket;
-                    itemTicketService.create (itemTicket);                
+                itemTicket.tickets_id = idTicket;
+                itemTicketService.create(itemTicket);
             }
         }
-        
+
     }
     async function handleItemTicketChange(e: React.ChangeEvent<HTMLSelectElement>) {
         const { value } = e.target;
@@ -43,16 +43,16 @@ export default function TicketSaisie() {
         const elements: JSX.Element[] = [];
         const itemTypeIds = itemTickets.map(i => Number(i.items_id)) ?? [];
         if (!itemTicket?.itemtype) return elements;
-        assets.forEach (a => {
+        assets.forEach(a => {
             mapItemName.current[a.id] = a.name ?? String(a.id)
         });
-        
+
         elements.push(
             <div key="item-select-container" className="d-flex gap-3 align-items-center mt-3">
                 <div className="flex-grow-1">
-                    <select 
+                    <select
                         className="form-select bg-dark text-white border-secondary"
-                        onChange={(e) => setItemTicket({ ...itemTicket, items_id: Number(e.target.value) })}   
+                        onChange={(e) => setItemTicket({ ...itemTicket, items_id: Number(e.target.value) })}
                     >
                         <option value="">-- Sélectionner l'élément --</option>
                         {assets.filter(a => !itemTypeIds.includes(a.id)).map(a => (
@@ -98,7 +98,7 @@ export default function TicketSaisie() {
                                 ></textarea>
                             </div>
 
-                            <div className="row g-3 mb-4">
+                            <div className="row g-4 mb-5">
                                 <div className="col-md-6">
                                     <label className="form-label text-light small fw-bold">PRIORITÉ</label>
                                     <select
@@ -111,6 +111,7 @@ export default function TicketSaisie() {
                                         ))}
                                     </select>
                                 </div>
+
                                 <div className="col-md-6">
                                     <label className="form-label text-light small fw-bold">TYPE DE TICKET</label>
                                     <select
@@ -119,6 +120,18 @@ export default function TicketSaisie() {
                                     >
                                         <option value="">-- Choisir un type --</option>
                                         {Object.entries(REVERSE_TICKET_TYPES).map(([key, value]) => (
+                                            <option key={key} value={value}>{key}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div className="col-md-6">
+                                    <label className="form-label text-light small fw-bold">Status</label>
+                                    <select
+                                        className="form-select bg-dark text-white border-secondary"
+                                        onChange={(e) => setTicket({ ...ticket, status: Number(e.target.value) })}
+                                    >
+                                        <option value="">-- Choisir un statut --</option>
+                                        {Object.entries(REVERSE_TICKET_STATUS).map(([key, value]) => (
                                             <option key={key} value={value}>{key}</option>
                                         ))}
                                     </select>
@@ -135,14 +148,14 @@ export default function TicketSaisie() {
                             </div>
                             <div className="mt-5 mb-4">
                                 <h6 className="text-info fw-bold border-bottom border-secondary pb-2 mb-4">ÉQUIPEMENTS ASSOCIÉS</h6>
-                                
+
                                 {/* Liste des équipements */}
                                 {itemTickets.length > 0 ? (
                                     <ul className="list-group list-group-flush rounded shadow-sm border border-secondary mb-4">
                                         {itemTickets.map((i, index) => (
                                             <li key={i.id || index} className="list-group-item bg-dark text-white border-secondary d-flex align-items-center py-3">
                                                 <span className="badge border border-info text-info me-3 px-3 py-2">{i.itemtype}</span>
-                                                <span className="fw-medium fs-6">{mapItemName.current [i.items_id!]|| i.items_id}</span>
+                                                <span className="fw-medium fs-6">{mapItemName.current[i.items_id!] || i.items_id}</span>
                                             </li>
                                         ))}
                                     </ul>
@@ -154,8 +167,8 @@ export default function TicketSaisie() {
                                 <div className="p-4 bg-secondary bg-opacity-10 rounded border border-secondary">
                                     <label className="form-label text-light small fw-bold mb-3">NOUVEL ÉQUIPEMENT À ASSOCIER</label>
                                     <div className="mb-0">
-                                        <select 
-                                            className="form-select bg-dark text-white border-secondary" 
+                                        <select
+                                            className="form-select bg-dark text-white border-secondary"
                                             onChange={(e) => handleItemTicketChange(e)}
                                         >
                                             <option value="">-- Choisir une catégorie d'équipement --</option>
