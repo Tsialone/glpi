@@ -26,7 +26,7 @@ export default function Layout() {
                 )}
 
                 <div>
-                    <h2>DashBoard</h2>
+                    <h2>Backoffice</h2>
                     <hr />
                     <Outlet></Outlet>
                 </div>

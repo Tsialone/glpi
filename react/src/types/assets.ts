@@ -1,3 +1,9 @@
+import type { IUser } from "./auth/user";
+import type { IItemModel } from "./item-model";
+import type { IItemState } from "./item-state";
+import type { ILocation } from "./location";
+import type { IManufacturer } from "./manufacturer";
+
 export interface IAssetLink {
     rel: string;
     href: string;
@@ -6,9 +12,9 @@ export interface IAssetLink {
 export interface IAsset {
     id: number;
     name: string | null;
-    users_id:number ;
-    locations_id:number;
-    states_id:number;
+    users_id: number;
+    locations_id: number;
+    states_id: number;
     manufacturers_id: number;
     is_deleted: number;
     is_recursive: number;
@@ -22,12 +28,6 @@ export interface IAsset {
     uuid: string | null;
     comment: string | null;
     otherserial: string | null;
-
-
-
-
-
-
 }
 
 export interface IComputer extends IAsset {
@@ -43,3 +43,40 @@ export interface IComputer extends IAsset {
     last_boot: string | null;
     links: IAssetLink[];
 }
+
+export interface IAssetFiche extends IAsset {
+    user:IUser | null,
+    manufacturer:IManufacturer | null,
+    item_type:string,
+    location:ILocation | null,
+    item_model:IItemModel | null,
+    item_state:IItemState | null
+}
+
+export interface IAssetFicheFilter {
+    name:string,
+    status_name:string,
+    user_name:string,
+    manufacturer_name:string,
+    localistaion_name:string,
+    item_type:string,
+    model_name:string
+}
+
+// export interface IDashBoardTotalParc {
+//     Computer: number;
+//     Monitor: number;
+//     NetworkEquipment: number;
+//     Peripheral: number;
+//     Printer: number;
+//     Phone: number;
+//     Rack: number;
+//     Enclosure: number;
+//     PDU: number;
+//     PassiveDCEquipment: number;
+//     Software: number;
+//     CartridgeItem: number;
+//     ConsumableItem: number;
+//     Item_DeviceSimcard: number;
+//     Cable: number;
+// }

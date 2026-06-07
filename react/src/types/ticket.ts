@@ -1,3 +1,6 @@
+import type { IAsset } from "./assets";
+import type { ITicketCost } from "./ticket-cost";
+
 export interface ITicketLink {
   rel: string;
   href: string;
@@ -49,4 +52,9 @@ export interface ITicket {
   tickettemplates_id: number;
   externalid: string | null;
   links: ITicketLink[];
+}
+
+export default interface ITicketFiche extends ITicket {
+  items:IAsset [],
+  ticket_costs:ITicketCost []
 }

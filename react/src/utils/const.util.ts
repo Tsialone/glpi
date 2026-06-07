@@ -37,7 +37,8 @@ export const ITEM_TYPE = [
 
 export const UTIL_CONST = {
     token: "session_token",
-    user: "user"
+    user: "user",
+    item_type:"item_type"
 }
 
 
@@ -102,9 +103,6 @@ export const IMPORT_NAMES = {
 export const BACK_OFFICE = {
     user: "employee"
 }
-export const FRONT_OFFICE = {
-    user: "customer",
-    cart: "cart"
-}
+
 
 

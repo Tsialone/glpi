@@ -1,29 +1,25 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { FRONT_OFFICE, url } from "../utils";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 // import type { ICreateCart } from "../types/carts/Cart";
 // import { useNavBarFront } from "../hooks/navbar-front.hook";
 import { NavBarFrontContext } from "../contexts/NavBarFrontContext";
-import type { ICustomer } from "../types/customers/Customer";
 
 export default function NavBarFront() {
     const location = useLocation();
     const navigate = useNavigate(); // Pour rediriger après déco
-    const navLinks = url.filter(u => u.path.includes('frontoffice'));
     const { productCount } = useContext(NavBarFrontContext)!;
-    const [customer, setCustomer] = useState<ICustomer | null>(null);
 
     useEffect(() => {
-        const storage = localStorage.getItem(FRONT_OFFICE.user);
-        if (!storage) return;
-        const customerJson = JSON.parse(storage) as ICustomer;
-        setCustomer(customerJson);
+        // const storage = localStorage.getItem(FRONT_OFFICE.user);
+        // if (!storage) return;
+        // const customerJson = JSON.parse(storage) as ICustomer;
+        // setCustomer(customerJson);
     }, []);
 
 
     const handleLogout = () => {
         // Ajoute ici ta logique de déconnexion (ex: localStorage.clear())
-        localStorage.removeItem(FRONT_OFFICE.user);
+        // localStorage.removeItem(FRONT_OFFICE.user);
         // localStorage.removeItem(FRONT_OFFICE.cart);
 
         console.log("Déconnexion...");
@@ -35,7 +31,7 @@ export default function NavBarFront() {
             style={{ backgroundColor: '#2a2a2b', borderBottom: '1px solid #444' }}>
             <div className="container">
                 <Link className="navbar-brand fw-bold" to="/frontoffice/home">
-                    <span className="text-primary text-uppercase">Mon</span>Shop
+                    <span className="text-primary text-uppercase">Gl</span>pi
                 </Link>
 
                 <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -44,69 +40,35 @@ export default function NavBarFront() {
 
                 <div className="collapse navbar-collapse" id="navbarNav">
                     <ul className="navbar-nav ms-auto align-items-center gap-2 gap-lg-3">
-                        {/* Liens dynamiques */}
-                        {navLinks.map((u, index) => (
-                            <li className="nav-item" key={index}>
-                                <Link
-                                    className={`nav-link px-2 fw-medium transition-all ${location.pathname === u.path
-                                        ? 'active text-primary fw-bold'
-                                        : 'text-muted-hover'
-                                        }`}
-                                    to={u.path}
-                                >
-                                    {u.url}
-                                </Link>
-                            </li>
-                        ))}
+
 
                         {/* Bouton Mes Commandes */}
                         <li className="nav-item">
                             <Link
-                                to="/frontoffice/orders"
-                                className={`btn btn-sm px-3 rounded-pill transition-all ${location.pathname === '/frontoffice/orders'
-                                    ? 'btn-primary'
-                                    : 'btn-outline-secondary'
-                                    }`}
+                                to="/frontoffice/item"
+                                className={`btn btn-sm px-3 rounded-pill transition-all btn-outline-secondary`}
                             >
-                                <i className="bi bi-bag me-1"></i> Mes commandes
+                                <i className="bi bi-bag me-1"></i> Elements
                             </Link>
                         </li>
-                        <li className="nav-item">
-                            <Link
-                                to="/frontoffice/remove-stock"
-                                className={`btn btn-sm px-3 rounded-pill transition-all ${location.pathname === '/frontoffice/orders'
-                                    ? 'btn-primary'
-                                    : 'btn-outline-secondary'
-                                    }`}
-                            >
-                                <i className="bi bi-bag me-1"></i> Remove stock
-                            </Link>
-                        </li>
-
                         {/* Bouton Mon Panier */}
                         <li className="nav-item">
                             <Link
-                                to="/frontoffice/carts"
-                                className={`btn btn-sm px-3 rounded-pill d-flex align-items-center transition-all ${location.pathname === '/frontoffice/carts'
-                                    ? 'btn-primary'
-                                    : 'btn-outline-primary'
-                                    }`}
+                                to="/frontoffice/ticket-saisie"
+                                className="btn btn-sm px-3 rounded-pill transition-all btn-outline-secondary"
                             >
-                                <i className="bi bi-cart3 me-1"></i> Mon Panier
-                                <span className="badge bg-danger ms-2 rounded-pill shadow-sm">
-                                    {productCount}
-                                </span>
+                                <i className="bi bi-cart3 me-1"></i>Nouveau ticket
                             </Link>
                         </li>
 
                         {/* Nom de l'utilisateur connecté */}
-                        {customer?.lastname && (
+                        {/* {customer?.lastname && (
                             <li className="nav-item border-start ps-lg-3 d-none d-lg-block">
                                 <span className="navbar-text small text-secondary fw-semibold">
                                     <i className="bi bi-person-circle me-1"></i> {customer.lastname}
                                 </span>
                             </li>
-                        )}
+                        )} */}
 
                         {/* Bouton Déconnexion Réparé */}
                         <li className="nav-item">

@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 import { LoadingContext } from "../contexts/Loading";
 import { getFileByNameCsv } from "../utils/parse.util";
 import type { LocalFile } from "papaparse";
-import { FRONT_OFFICE, IMPORT_NAMES, UTIL_CONST } from "../utils";
+import { IMPORT_NAMES, UTIL_CONST } from "../utils";
 import { extractImagesFromZip } from "../utils/upload.util";
 import { useNavBarFront } from "../hooks/navbar-front.hook";
 import { PopupContext } from "../contexts/PopupContext";

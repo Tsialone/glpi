@@ -3,9 +3,38 @@ import type { ITicketImport } from "../types/import/tickets-import";
 import type { ITicket } from "../types/ticket";
 import { MethodeService } from "./methode.service";
 import { REVERSE_TICKET_PRIORITY, REVERSE_TICKET_STATUS, REVERSE_TICKET_TYPES, TICKET_TYPES } from "../utils";
+import type ITicketFiche from "../types/ticket";
+import { assetsService } from "./assets.service";
+import { ticketCostService } from "./ticket-cost.service";
 
 class TicketService extends MethodeService {
     private endpoint = "Ticket";
+    async getItemsById (idTicket:number){
+        return await assetsService.getByIdTicket (idTicket);
+    }
+    async getTicketFicheById (idTicket:number) : Promise<ITicketFiche>{
+        const ticket = await this.getById (idTicket) as ITicketFiche;
+        const items = await this.getItemsById (idTicket);
+        const ticketCosts = await ticketCostService.getByIdTicket (idTicket);
+        ticket.items = items;
+        ticket.ticket_costs = ticketCosts;
+
+
+        return ticket;
+    }
+    async getDashBoardTotalTicket () : Promise<Record<string , number>>{
+        const resp : Record<string , number> = {};
+        const tickets = await this.getAll ();
+        for (const ticketType in REVERSE_TICKET_TYPES) {
+            console.log (REVERSE_TICKET_TYPES);
+            if (!Object.hasOwn(REVERSE_TICKET_TYPES, ticketType)) continue;
+            const element = REVERSE_TICKET_TYPES[ticketType];
+            console.log (element , " : " , ticketType);
+            const ticketByType =  tickets.filter (t => t.type === element );
+            resp[ticketType] = ticketByType.length;
+        }
+        return resp;
+    }
     async createsByTicketImport(ticketImports: ITicketImport[]): Promise<void> {
         for (const ticketImport of ticketImports) {
             const dateStr = `${ticketImport.date} ${ticketImport.heure}:00`;

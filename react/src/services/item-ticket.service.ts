@@ -8,6 +8,10 @@ import { ticketService } from "./ticket.service";
 
 class ItemTicketService extends MethodeService {
     private endpoint = "Item_Ticket";
+    
+    async getByIdTicket(idTicket: number): Promise<IItemTicket[]> {
+        return (await this.getAll()).filter(it => it.tickets_id === idTicket);
+    }
     async createsByTicketImport(ticketImports: ITicketImport[]): Promise<void> {
         const [items, tickets] = await Promise.all([
             assetsService.getAll(),
