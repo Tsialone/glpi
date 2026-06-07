@@ -4,7 +4,6 @@ import { ITEM_NO_MODEL, ITEM_TYPE } from "../utils";
 import { MethodeService } from "./methode.service";
 
 class ItemModelService extends MethodeService {
-
     async createsByAssetImport(assetImports: IAssetImport[]): Promise<void> {
         const modelNames = [...new Set(assetImports.filter(ai => ai.model).map(ai => ai.model.trim()))];
         const mapItemModel: Record<string, string | undefined> = {

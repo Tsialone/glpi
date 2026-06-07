@@ -12,7 +12,7 @@ export class MethodeService {
 
     async get<T = any>(url: string): Promise<T> {
         try {
-            const newUrl = url.includes("?") ? `${url}&range=0-99999999` : `${url}?range=0-99999999`;
+            const newUrl = url.includes("?") ? `${url}&range=0-999` : `${url}?range=0-999`;
             const result = await this.defaultApiClient.get<T>(newUrl);
             return result.data;
         } catch (error: any) {

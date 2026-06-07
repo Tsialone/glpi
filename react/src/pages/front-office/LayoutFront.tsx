@@ -1,7 +1,6 @@
 import { Outlet } from "react-router-dom";
 import NavBarFront from "../../components/NavbarFront";
 import { NavBarFrontProvider } from "../../contexts/NavBarFrontContext";
-import type { ICustomer } from "../../types/customers/Customer";
 
 export default function LayoutFront() {
     return (

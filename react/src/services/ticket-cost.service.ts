@@ -6,6 +6,9 @@ import { ticketService } from "./ticket.service";
 class TicketCostService extends MethodeService {
 
     private endpoint = "TicketCost";
+    async getByIdTicket(idTicket: number): Promise<ITicketCost[]> {
+        return (await this.getAll()).filter(tc => tc.tickets_id === idTicket);
+    }
     async createByTicketCostImports(ticketCostImports: ITicketCostImport[]) {
         const tickets = await ticketService.getAll();
         for (const ticketCostImport of ticketCostImports) {

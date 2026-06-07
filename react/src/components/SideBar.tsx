@@ -36,9 +36,33 @@ export default function SideBar({ isOpen = true, onClose }: SideBarProps) {
             <hr />
             <ul className="nav nav-pills flex-column mb-auto">
                 <li className="nav-item mb-1">
+                    <Link to="/frontoffice" className="nav-link text-white">
+                        <i className="bi bi-download me-2"></i>
+                        Frontoffice
+                    </Link>
+                </li>
+                <li className="nav-item mb-1">
                     <Link to="/backoffice/admin/imports" className="nav-link text-white">
                         <i className="bi bi-download me-2"></i>
                         Import
+                    </Link>
+                </li>
+                <li className="nav-item mb-1">
+                    <Link to="/backoffice/admin/dashboard-parc" className="nav-link text-white">
+                        <i className="bi bi-download me-2"></i>
+                        Dashboard Parc
+                    </Link>
+                </li>
+                <li className="nav-item mb-1">
+                    <Link to="/backoffice/admin/dashboard-ticket" className="nav-link text-white">
+                        <i className="bi bi-download me-2"></i>
+                        Dashboard Ticket
+                    </Link>
+                </li>
+                <li className="nav-item mb-1">
+                    <Link to="/backoffice/admin/ticket" className="nav-link text-white">
+                        <i className="bi bi-download me-2"></i>
+                        Tickets
                     </Link>
                 </li>
             </ul>

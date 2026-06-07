@@ -5,13 +5,19 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import Login from "./pages/Login";
 import { Navigate, Outlet } from "react-router-dom";
-import {UTIL_CONST } from "./utils";
+import { UTIL_CONST } from "./utils";
 import Import from "./pages/Import";
 import LayoutFront from "./pages/front-office/LayoutFront";
 import { LoginFront } from "./pages/front-office/LoginFront";
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import { useEffect, useState } from "react";
 import Article from "./pages/Article";
+import DashBoardParc from "./pages/DashBoardParc";
+import DashBoardTicket from "./pages/DashBoardTicket";
+import { Tickets } from "./pages/tickets/Tickets";
+import TicketFiche from "./pages/TicketFiche";
+import Item from "./pages/front-office/Item";
+import TicketSaisie from "./pages/front-office/TicketSaisie";
 
 // Définition des composants de protection en dehors de App pour éviter la recréation à chaque render
 const ProtectedFrontOfficeceRoute = () => {
@@ -56,6 +62,15 @@ export function App() {
         <Route element={<ProtectedBackOfficeRoute />} >
           <Route path="/backoffice/admin" element={<Layout />} >
             <Route path="imports" element={<Import />} ></Route>
+            {/* tickets */}
+            <Route path="ticket" element={<Tickets />} ></Route>
+            <Route path="ticket/:idTicket" element={<TicketFiche />} ></Route>
+
+
+            {/* stats */}
+            <Route path="dashboard-parc" element={<DashBoardParc />} ></Route>
+            <Route path="dashboard-ticket" element={<DashBoardTicket />} ></Route>
+
             <Route path="articles" element={<Article />} ></Route>
           </Route>
         </Route>
@@ -63,10 +78,12 @@ export function App() {
 
         {/* front */}
         <Route path="/" element={<LoginFront />} />
-        <Route element={<ProtectedFrontOfficeceRoute />} >
-          <Route path="/frontoffice" element={<LayoutFront />} >
-          </Route>
+        {/* <Route element={<ProtectedFrontOfficeceRoute />} > */}
+        <Route path="/frontoffice" element={<LayoutFront />} >
+          <Route path="item" element={<Item />} ></Route>
+          <Route path="ticket-saisie" element={<TicketSaisie />} ></Route>
         </Route>
+        {/* </Route> */}
 
       </Routes>
     </BrowserRouter>
