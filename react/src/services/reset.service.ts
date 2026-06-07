@@ -5,6 +5,7 @@ import { itemStateService } from "./item-state.service";
 import { itemTicketService } from "./item-ticket.service";
 import { locationService } from "./location.service";
 import { manufacturerService } from "./manufacturer.service";
+import { ticketCostService } from "./ticket-cost.service";
 import { ticketService } from "./ticket.service";
 import { userService } from "./user.service";
 
@@ -23,6 +24,9 @@ class ResetService {
         // fichier 2
         await ticketService.purge ();
         await itemTicketService.purge ();
+
+        // fichier 3
+        ticketCostService.purge();
 
     }
 }

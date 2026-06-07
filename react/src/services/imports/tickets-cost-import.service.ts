@@ -2,10 +2,13 @@ import type { LocalFile } from "papaparse";
 import type { ITicketCostImport } from "../../types/import/tickets-cost-import";
 import { makeImport } from "../../functions/csv";
 import { parseNumber } from "../../utils/parse.util";
+import { ticketCostService } from "../ticket-cost.service";
 
 class TicketsCostImportService {
     csvHeaders: string[] = ["num_ticket", "duration_second", "time_cost", "fixed_cost"];
-
+    async doImport(ticketCostImports: ITicketCostImport[]) {
+        await ticketCostService.createByTicketCostImports(ticketCostImports);
+    }
     // parseCsv = async (objects: ITicketCostImport[]): Promise<ITicketCostImport[]> => {
     //     let resp: ITicketCostImport[] = [];
     //     if (objects instanceof Array) {

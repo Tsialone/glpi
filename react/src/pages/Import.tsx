@@ -180,13 +180,14 @@ export default function Import() {
             if (ticketFile) {
                 console.log("Parsing tickets...");
                 const tickeImport = await ticketsImportService.getByCsv(ticketFile);
-                await ticketsImportService.doImport (tickeImport);
+                await ticketsImportService.doImport(tickeImport);
                 console.log(tickeImport);
             }
 
             if (ticketCostFile) {
                 console.log("Parsing ticket costs...");
                 const tickeCostImport = await ticketsCostImportService.getByCsv(ticketCostFile);
+                await ticketsCostImportService.doImport(tickeCostImport);
                 console.log(tickeCostImport);
             }
 
