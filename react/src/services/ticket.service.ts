@@ -2,13 +2,28 @@ import { DateTime } from "luxon";
 import type { ITicketImport } from "../types/import/tickets-import";
 import type { ITicket } from "../types/ticket";
 import { MethodeService } from "./methode.service";
-import { REVERSE_TICKET_PRIORITY, REVERSE_TICKET_STATUS, REVERSE_TICKET_TYPES, TICKET_TYPES } from "../utils";
+import { REVERSE_TICKET_PRIORITY, REVERSE_TICKET_STATUS, REVERSE_TICKET_TYPES, TICKET_STATUS, TICKET_TYPES } from "../utils";
 import type ITicketFiche from "../types/ticket";
 import { assetsService } from "./assets.service";
 import { ticketCostService } from "./ticket-cost.service";
 
 class TicketService extends MethodeService {
     private endpoint = "Ticket";
+    async getDashBoardTotalTicketByStatus () : Promise<Record<string  , number>>{
+        const resp :  Record<string , number> = {};
+        const tickets = await this.getAll ();
+        for (const ticketStatus in REVERSE_TICKET_STATUS) {
+            if (!Object.hasOwn(REVERSE_TICKET_STATUS, ticketStatus)) continue;
+            
+            const element = REVERSE_TICKET_STATUS[ticketStatus];
+            const ticketFilterd = tickets.filter (t => t.status === element);
+            resp[ticketStatus] = ticketFilterd.length;
+        }
+        return resp;
+    }
+    async getByIdStatus (idStatus : number){
+        return (await this.getAll ()).filter (t => t.status === idStatus);
+    }
     async getItemsById (idTicket:number){
         return await assetsService.getByIdTicket (idTicket);
     }
@@ -45,7 +60,7 @@ class TicketService extends MethodeService {
                 type: REVERSE_TICKET_TYPES[ticketImport.type],
                 name: ticketImport.titre,
                 content: ticketImport.description,
-                status: REVERSE_TICKET_STATUS["New"],
+                status: REVERSE_TICKET_STATUS["new"],
                 priority: REVERSE_TICKET_PRIORITY[ticketImport.priority.toLowerCase()],
                 externalid: ticketImport.ref_ticket
             }

@@ -180,8 +180,8 @@ export default function Import() {
             if (ticketFile) {
                 console.log("Parsing tickets...");
                 const tickeImport = await ticketsImportService.getByCsv(ticketFile);
-                await ticketsImportService.doImport(tickeImport);
                 console.log(tickeImport);
+                await ticketsImportService.doImport(tickeImport);
             }
 
             if (ticketCostFile) {
@@ -195,6 +195,7 @@ export default function Import() {
         } catch (error) {
             console.error("Échec de l'import : tout s'arrête: ", (error as Error).message);
             try {
+                await resetService.resetAll();
                 await updateAssets();
             } catch (cleanupError) {
                 console.error("Échec du nettoyage après erreur:", cleanupError);

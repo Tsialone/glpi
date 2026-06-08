@@ -18,6 +18,8 @@ interface TableProps<T> {
     pagination?: boolean;
     /** Nombre d'éléments par page si la pagination est activée (par défaut: 10) */
     itemsPerPage?: number;
+    /** Rend le tableau plus petit/compact en réduisant les marges intérieures (par défaut: false) */
+    compact?: boolean;
 }
 
 /**
@@ -30,7 +32,8 @@ export function Table<T>({
     renderRow, 
     emptyMessage = "Aucune donnée trouvée.",
     pagination = false,
-    itemsPerPage = 10
+    itemsPerPage = 10,
+    compact = false
 }: TableProps<T>) {
     
     // État local de la pagination
@@ -58,7 +61,7 @@ export function Table<T>({
     return (
         <div>
             <div className="table-responsive shadow-sm rounded border border-secondary">
-                <table className="table table-dark table-striped table-hover align-middle mb-0">
+                <table className={`table table-dark table-striped table-hover align-middle mb-0 ${compact ? 'table-sm' : ''}`}>
                     <thead className="table-secondary text-dark">
                         <tr>
                             {columns.map((col , index) => (

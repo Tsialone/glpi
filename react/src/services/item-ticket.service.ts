@@ -17,10 +17,12 @@ class ItemTicketService extends MethodeService {
             assetsService.getAll(),
             ticketService.getAll()
         ]);
+
         for (const ticketImport of ticketImports) {
             const itemFiltreds = items.filter(i => i.name && ticketImport.items_array.includes(i.name));
             const ticket = tickets.find(t => String(t.externalid) === String(ticketImport.ref_ticket));
             const idTicket = ticket?.id ?? null;
+            console.log ("items a inséré: " , itemFiltreds.map (i => i.name));
             if (idTicket === null) throw new Error(`Ticket introuvable: ${ticketImport.ref_ticket}`)
             for (const itemFiltred of itemFiltreds) {
                 const itemType = await assetsService.getItempTypeById(itemFiltred.id);

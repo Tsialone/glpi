@@ -17,6 +17,8 @@ export default function Item() {
         { key: "location", label: "Localisation" },
         { key: "type", label: "Type" },
         { key: "model", label: "Modèle" },
+        { key: "image", label: "Image" },
+
     ];
     async function getAssets(filter?: Partial<IAssetFicheFilter>) {
         try {
@@ -32,7 +34,7 @@ export default function Item() {
 
     }
     useEffect(() => {
-            getAssets();
+        getAssets();
     }, []);
     async function handleFilter() {
         try {
@@ -138,6 +140,18 @@ export default function Item() {
                             <span className="badge border border-info text-info">{a.item_type}</span>
                         </td>
                         <td>{a.item_model?.name || <span className="text-muted">-</span>}</td>
+                        <td style={{ width: '100px'}} className="align-middle">
+                            <img
+                                src={a.image}
+                                alt="Pas d'image"
+                                style={{
+                                    width: '100%',
+                                    height: '100%',
+                                    objectFit: 'cover', 
+                                    display: 'block'   
+                                }}
+                            />
+                        </td>
                     </>
                 )}
             />

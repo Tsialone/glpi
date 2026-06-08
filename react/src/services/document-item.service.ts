@@ -5,6 +5,9 @@ class DocumentItemService extends MethodeService {
     private endpoint = "Document_Item";
 
     
+    async getByIdItem(idItem: number): Promise<IDocumentItem[]> {
+        return (await this.getAll()).filter(di => di.items_id === idItem);
+    }
     async getAll() {
         return await this.get<IDocumentItem[]>(this.endpoint);
     }

@@ -1,4 +1,5 @@
 import { assetsService } from "./assets.service";
+import { budgetService } from "./budget.service";
 import { documentService } from "./document.service";
 import { itemModelService } from "./item-model.service";
 import { itemStateService } from "./item-state.service";
@@ -27,6 +28,10 @@ class ResetService {
 
         // fichier 3
         ticketCostService.purge();
+
+
+        // autre
+        budgetService.purge ();
 
     }
 }

@@ -1,15 +1,53 @@
+import type { AxiosResponse } from "axios";
 import type { IDocument } from "../types/document";
 import type { IAssetImport } from "../types/import/assets-import";
 import { ITEM_TYPE } from "../utils";
+import { apiClient } from "../utils/api";
 import type { ExtractedImage } from "../utils/upload.util";
+import { documentItemService } from "./document-item.service";
 import { itemModelService } from "./item-model.service";
 import { MethodeService } from "./methode.service";
 
 class DocumentService extends MethodeService {
     private endpoint = "Document";
+    async getImageById(id: number): Promise<Blob | null> {
+        try {
+            const resp = await apiClient.get<Blob>(`${this.endpoint}/${id}`, {
+                params: { alt: 'media' },
+                responseType: 'blob', 
+                headers: {
+                    'Accept': 'application/octet-stream' 
+                }
+            });
+
+            if (resp.data && resp.data.size > 0) {
+                return resp.data;
+            }
+
+            return null;
+        } catch (error) {
+            throw error;
+        }
+    }
+    async getByIdItem(idItem: number): Promise<IDocument[]> {
+        const [documentItems, documents] = await Promise.all(
+            [
+                documentItemService.getByIdItem(idItem),
+                this.getAll()
+            ]
+        );
+        const resp: IDocument[] = [];
+        for (const documentItem of documentItems) {
+            const document = documents.find(d => d.id === documentItem.documents_id) ?? null;
+            if (document) {
+                resp.push(document);
+            }
+        }
+        return resp;
+    }
     async createsByextractedImages(extractedImages: ExtractedImage[]): Promise<void> {
         for (const image of extractedImages) {
-            console.log ("Importion de" , image , " .....");
+            console.log("Importion de", image, " .....");
             await this.create(image)
         }
     }
@@ -24,7 +62,7 @@ class DocumentService extends MethodeService {
 
     async create(extractedImage: ExtractedImage) {
         const formData = new FormData();
-        const filename = extractedImage.name.split (".")[0] + ".jpeg";
+        const filename = extractedImage.name.split(".")[0] + ".jpeg";
 
         const uploadManifest = {
             input: {
@@ -34,7 +72,7 @@ class DocumentService extends MethodeService {
         };
 
         formData.append("uploadManifest", JSON.stringify(uploadManifest));
-        formData.append("filename[0]", extractedImage.blob , filename);
+        formData.append("filename[0]", extractedImage.blob, filename);
 
         try {
             const result = await this.defaultApiClient.post(this.endpoint, formData, {
@@ -63,7 +101,7 @@ class DocumentService extends MethodeService {
 
     async purge() {
         const ids = (await this.getAll()).map(o => o.id);
-        console.log (ids);
+        console.log(ids);
         return await this.reset(this.endpoint, ids);
     }
 }

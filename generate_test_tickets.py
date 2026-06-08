@@ -58,7 +58,7 @@ def random_date(start_date, end_date):
 start_date = datetime.strptime("01/01/2026", "%d/%m/%Y")
 end_date = datetime.strptime("30/06/2026", "%d/%m/%Y")
 
-num_tickets = 120
+num_tickets = 400
 
 with open("test-import/ticket.csv", mode="w", newline="", encoding="utf-8") as file:
     # Paramétrage pour forcer les guillemets (QUOTE_MINIMAL suffit si on met un JSON string)

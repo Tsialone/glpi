@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { ticketService } from "../services/ticket.service";
 import { TICKET_PRIORITY, TICKET_STATUS } from "../utils";
@@ -11,6 +11,7 @@ export default function TicketFiche() {
 
     const [isItemModalOpen, setIsItemModalOpen] = useState(false);
     const [isItemCostOpen, setIsItemCostOpen] = useState(false);
+    const recapItemCost = useRef({ duree: 0, cout_temps: 0, cout_fixe: 0, cout_materiel: 0, total: 0 });
 
     async function getTicket() {
         if (idTicket) {
@@ -58,11 +59,19 @@ export default function TicketFiche() {
             <div>
                 <Modal
                     isOpen={isItemCostOpen}
-                    onClose={() => setIsItemCostOpen(false)}
+                    onClose={() => {
+                        recapItemCost.current = { duree: 0, cout_temps: 0, cout_fixe: 0, cout_materiel: 0, total: 0 }
+                        console.log(recapItemCost);
+                        setIsItemCostOpen(false)
+                    }}
                     title="Les coûts associés au ticket"
                     size="xl"
                     footer={
-                        <button className="btn btn-outline-light" onClick={() => setIsItemCostOpen(false)}>
+                        <button className="btn btn-outline-light" onClick={() => {
+                            recapItemCost.current = { duree: 0, cout_temps: 0, cout_fixe: 0, cout_materiel: 0, total: 0 }
+                            console.log(recapItemCost);
+                            setIsItemCostOpen(false)
+                        }}>
                             Fermer
                         </button>
                     }
@@ -81,7 +90,8 @@ export default function TicketFiche() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {ticket?.ticket_costs && ticket.ticket_costs.length > 0 ? (
+
+                                {ticket?.ticket_costs && isItemCostOpen && ticket.ticket_costs.length > 0 ? (
                                     ticket.ticket_costs.map((tc, index) => {
                                         const cTime = Number(String(tc.cost_time || 0).replace(',', '.'));
                                         const cFixed = Number(String(tc.cost_fixed || 0).replace(',', '.'));
@@ -89,7 +99,16 @@ export default function TicketFiche() {
                                         const actionTime = Number(String(tc.actiontime || 0).replace(',', '.'));
                                         const actionCost = (actionTime / 3600) * cTime;
                                         const total = actionCost + cFixed + cMaterial;
-                                        console.log (actionTime);
+                                        recapItemCost.current.duree += actionTime;
+                                        recapItemCost.current.cout_fixe += cFixed;
+                                        recapItemCost.current.cout_materiel += cMaterial;
+                                        recapItemCost.current.cout_temps += cTime;
+
+                                        recapItemCost.current.total += total;
+                                        console.log(total);
+                                        // recapItemCost.current.total+=total;
+
+                                        // console.log(actionTime);
                                         return (
                                             <tr key={index}>
                                                 <td className="px-3 fw-medium">{tc.name || "-"}</td>
@@ -107,6 +126,15 @@ export default function TicketFiche() {
                                         <td colSpan={7} className="text-center py-5 text-muted">Aucun coût enregistré pour ce ticket.</td>
                                     </tr>
                                 )}
+                                <tr >
+                                    <td></td>
+                                    <td></td>
+                                    <td>{recapItemCost.current.duree.toFixed(2)}</td>
+                                    <td>{recapItemCost.current.cout_temps.toFixed (2)}</td>
+                                    <td>{recapItemCost.current.cout_fixe.toFixed (2)}</td>
+                                    <td>{recapItemCost.current.cout_materiel.toFixed (2)}</td>
+                                    <td>{recapItemCost.current.total.toFixed (2)} €</td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
