@@ -2,11 +2,18 @@ import { useEffect, useRef, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { ticketService } from "../services/ticket.service";
 import { TICKET_PRIORITY, TICKET_STATUS } from "../utils";
-import type ITicketFiche from "../types/ticket";
 import { Modal } from "../components/Modal";
+import type { ITicketFiche } from "../types/ticket";
 
-export default function TicketFiche() {
-    const { idTicket } = useParams();
+interface TicketFicheProps {
+    id?: number;
+
+}
+export default function TicketFiche(props?: TicketFicheProps) {
+    let { idTicket } = useParams();
+    if (!idTicket && props?.id) {
+        idTicket = String(props.id);
+    }
     const [ticket, setTicket] = useState<ITicketFiche | null>(null);
 
     const [isItemModalOpen, setIsItemModalOpen] = useState(false);
@@ -27,7 +34,7 @@ export default function TicketFiche() {
 
 
     return (
-        <div className="container-fluid p-4 min-vh-100 bg-dark text-white">
+        <div >
             <div>
                 <Modal
                     isOpen={isItemModalOpen}
@@ -130,22 +137,22 @@ export default function TicketFiche() {
                                     <td></td>
                                     <td></td>
                                     <td>{recapItemCost.current.duree.toFixed(2)}</td>
-                                    <td>{recapItemCost.current.cout_temps.toFixed (2)}</td>
-                                    <td>{recapItemCost.current.cout_fixe.toFixed (2)}</td>
-                                    <td>{recapItemCost.current.cout_materiel.toFixed (2)}</td>
-                                    <td>{recapItemCost.current.total.toFixed (2)} €</td>
+                                    <td>{recapItemCost.current.cout_temps.toFixed(2)}</td>
+                                    <td>{recapItemCost.current.cout_fixe.toFixed(2)}</td>
+                                    <td>{recapItemCost.current.cout_materiel.toFixed(2)}</td>
+                                    <td>{recapItemCost.current.total.toFixed(2)} €</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                 </Modal>
             </div>
-            <div className="d-flex justify-content-between align-items-center mb-4">
+            {/* <div className="d-flex justify-content-between align-items-center mb-4">
                 <h2>Fiche du Ticket {ticket ? `#${ticket.id}` : ''}</h2>
                 <Link to="/backoffice/admin/ticket" className="btn btn-outline-light btn-sm shadow-sm">
                     &larr; Retour à la liste
                 </Link>
-            </div>
+            </div> */}
 
             {ticket ? (
                 <div className="card bg-dark text-white border-secondary shadow">

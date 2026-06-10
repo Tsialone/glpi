@@ -13,8 +13,20 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
     />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
   </head>
+
   <body>
+    <dialog id="maBoite">
+      <p>Ceci est une boîte de dialogue native !</p>
+      <button onclick="document.getElementById('maBoite').close()">
+        Fermer
+      </button>
+    </dialog>
+    <button onclick="document.getElementById('maBoite').showModal()">Ouvrir la boîte</button>
     <div class="container bg-dark-subtle">
       <div class="row mt-5 col-6 d-flex">
         <p class="text col-2 mt-4">Hello</p>
@@ -33,6 +45,41 @@
         <p class="text col-2 mt-4">Hello</p>
         <p class="text col-2 mt-4">Hello</p>
         <p class="text col-2 mt-4">Hello</p>
+      </div>
+    </div>
+    <div class="container bg-dark-subtle">
+      <div
+        class="container col-2 d-flex flex-column rounded-3"
+        style="background-color: cadetblue"
+      >
+        <div
+          class="w-100 d-flex justify-content-between align-items-center mb-1 mt-1"
+        >
+          <h4 class="text-dark mb-0">Hello</h4>
+          <div
+            class="badge fw-bold text-dark rounded-circle d-inline-flex align-items-center justify-content-center"
+            style="
+              background-color: azure;
+              width: 25px;
+              height: 25px;
+              font-size: 10px;
+            "
+          >
+            999
+          </div>
+        </div>
+        <div class="p-2 bg-light rounded-3 mb-2">
+          <span class="text-dark">Hello</span>
+        </div>
+        <div class="p-2 bg-light rounded-3 mb-2">
+          <span class="text-dark">Hello</span>
+        </div>
+
+        <button class="p-2 bg-light rounded-3 mb-2">
+          <span class="text-dark"
+            ><i class="bi bi-plus"></i> Ajouter un ticket</span
+          >
+        </button>
       </div>
     </div>
     <div class="d-flex justify-content-center container bg-dark-subtle mt-5">

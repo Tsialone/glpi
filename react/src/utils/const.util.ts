@@ -46,7 +46,8 @@ export const ITEM_TYPE = [
 export const UTIL_CONST = {
     token: "session_token",
     user: "user",
-    item_type:"item_type"
+    item_type: "item_type",
+    ticket_position: "ticket_position"
 }
 
 
@@ -75,6 +76,15 @@ export const TICKET_STATUS = {
     6: "closed",
     10: "approval"
 };
+
+export const TICKET_VALIDATION_STATUS = {
+    1: "waiting",
+    2: "refused",
+    3: "granted"
+}
+export const REVERSE_TICKET_VALIDATION_STATUS = Object.fromEntries(
+    Object.entries(TICKET_VALIDATION_STATUS).map(([key, value]) => [value, Number(key)])
+);
 
 export const REVERSE_TICKET_STATUS = Object.fromEntries(
     Object.entries(TICKET_STATUS).map(([key, value]) => [value, Number(key)])

@@ -18,6 +18,7 @@ import { Tickets } from "./pages/tickets/Tickets";
 import TicketFiche from "./pages/TicketFiche";
 import Item from "./pages/front-office/Item";
 import TicketSaisie from "./pages/front-office/TicketSaisie";
+import TicketStatus from "./pages/front-office/TicketStatus";
 
 // Définition des composants de protection en dehors de App pour éviter la recréation à chaque render
 const ProtectedFrontOfficeceRoute = () => {
@@ -82,6 +83,8 @@ export function App() {
         <Route path="/frontoffice" element={<LayoutFront />} >
           <Route path="item" element={<Item />} ></Route>
           <Route path="ticket-saisie" element={<TicketSaisie />} ></Route>
+          <Route path="ticket-status" element={<TicketStatus />} ></Route>
+
         </Route>
         {/* </Route> */}
 

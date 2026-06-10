@@ -52,9 +52,22 @@ export interface ITicket {
   tickettemplates_id: number;
   externalid: string | null;
   links: ITicketLink[];
+
+
+  // for kanban
+  position?:number,
 }
 
-export default interface ITicketFiche extends ITicket {
+export  interface ITicketFiche extends ITicket {
   items:IAsset [],
   ticket_costs:ITicketCost []
+}
+
+export  interface ITicketKanbanType {
+  key:string ,
+  label:string,
+}
+export interface ITicketKnabanPosition {
+  id_ticket : number,
+  position:number
 }
