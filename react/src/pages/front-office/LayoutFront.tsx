@@ -9,7 +9,7 @@ export default function LayoutFront() {
             <NavBarFrontProvider>
                 {<NavBarFront  ></NavBarFront>}
             {/* Contenu dynamique (tes pages) */}
-            <main className="container py-4">
+            <main className="container-fuild py-4">
                 <Outlet />
             </main>
             </NavBarFrontProvider>

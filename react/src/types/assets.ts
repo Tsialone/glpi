@@ -51,6 +51,7 @@ export interface IAssetFiche extends IAsset {
     location:ILocation | null,
     item_model:IItemModel | null,
     item_state:IItemState | null
+    image:string
 }
 
 export interface IAssetFicheFilter {
@@ -60,7 +61,7 @@ export interface IAssetFicheFilter {
     manufacturer_name:string,
     localistaion_name:string,
     item_type:string,
-    model_name:string
+    model_name:string,
 }
 
 // export interface IDashBoardTotalParc {

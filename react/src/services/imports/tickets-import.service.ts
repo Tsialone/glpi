@@ -26,6 +26,7 @@ class TicketsImportService {
         return resp;
     }
     parseItems(jsonString: string): string[] {
+        if (jsonString === null || jsonString === "" || jsonString === "[]") return []; 
         return JSON.parse(jsonString);
     }
 

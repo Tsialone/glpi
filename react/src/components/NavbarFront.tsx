@@ -51,6 +51,14 @@ export default function NavBarFront() {
                                 <i className="bi bi-bag me-1"></i> Elements
                             </Link>
                         </li>
+                        <li className="nav-item">
+                            <Link
+                                to="/backoffice/admin"
+                                className={`btn btn-sm px-3 rounded-pill transition-all btn-outline-secondary`}
+                            >
+                                <i className="bi bi-bag me-1"></i> Backoffice
+                            </Link>
+                        </li>
                         {/* Bouton Mon Panier */}
                         <li className="nav-item">
                             <Link
@@ -58,6 +66,14 @@ export default function NavBarFront() {
                                 className="btn btn-sm px-3 rounded-pill transition-all btn-outline-secondary"
                             >
                                 <i className="bi bi-cart3 me-1"></i>Nouveau ticket
+                            </Link>
+                        </li>
+                         <li className="nav-item">
+                            <Link
+                                to="/frontoffice/ticket-status"
+                                className="btn btn-sm px-3 rounded-pill transition-all btn-outline-secondary"
+                            >
+                                <i className="bi bi-cart3 me-1"></i>Status ticket
                             </Link>
                         </li>
 

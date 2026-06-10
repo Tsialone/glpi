@@ -1,6 +1,29 @@
 import { useEffect, useState, type JSX } from "react";
 import { assetsService } from "../services/assets.service";
-
+import {
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    BarElement,
+    ArcElement,
+    Title,
+    Tooltip,
+    Legend,
+} from 'chart.js';
+import { Line } from "react-chartjs-2";
+ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    BarElement,
+    ArcElement,
+    Title,
+    Tooltip,
+    Legend
+);
 export default function DashBoardParc() {
     const [totalItemMap, setTotalItemMap] = useState<Record<string, number>>();
     const [totalGenerale, setTotalGenerale] = useState<number>(0);
@@ -8,7 +31,7 @@ export default function DashBoardParc() {
     async function getTotalTotalItemMap() {
         const respTotalItemMap = await assetsService.getDashBoardTotalParc();
         setTotalItemMap(respTotalItemMap);
-        
+
         let total = 0;
         for (const item in respTotalItemMap) {
             if (Object.hasOwn(respTotalItemMap, item)) {
@@ -22,6 +45,21 @@ export default function DashBoardParc() {
         getTotalTotalItemMap();
     }, []);
 
+    const LineChart = () => {
+        const data = {
+            labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin'],
+            datasets: [
+                {
+                    label: 'Ventes 2024',
+                    data: [65, 59, 80, 81, 56, 55],
+                    fill: false,
+                    borderColor: 'rgb(75, 192, 192)',
+                    tension: 0.1 // Courbure de la ligne (0 = droite)
+                }
+            ]
+        };
+        return <Line data={data} />;
+    };
     function drawTotalItemMap() {
         let elements: JSX.Element[] = [];
         for (const item in totalItemMap) {
@@ -42,16 +80,19 @@ export default function DashBoardParc() {
     }
 
     return (
-        <div className="container-fluid p-4 min-vh-100 bg-dark">
-            <div className="d-flex justify-content-between align-items-center mb-4">
-                <h4 className="text-white mb-0">Vue d'ensemble du Parc</h4>
-                <div className="badge bg-primary px-3 py-2 fs-5 shadow-sm">
-                    Total Général : {totalGenerale}
+        <div>
+            <div className="container-fluid p-4 min-vh-100 bg-dark">
+                <div className="d-flex justify-content-between align-items-center mb-4">
+                    <h4 className="text-white mb-0">Vue d'ensemble du Parc</h4>
+                    <div className="badge bg-primary px-3 py-2 fs-5 shadow-sm">
+                        Total Général : {totalGenerale}
+                    </div>
+                </div>
+                <div className="row">
+                    {drawTotalItemMap()}
                 </div>
             </div>
-            <div className="row">
-                {drawTotalItemMap()}
-            </div>
         </div>
+
     )
 }

@@ -13,6 +13,7 @@ import { documentItemService } from "./document-item.service";
 import type { ITicket } from "../types/ticket";
 import { itemTicketService } from "./item-ticket.service";
 import { use } from "react";
+import type { IDocument } from "../types/document";
 
 
 class AssetsService extends MethodeService {
@@ -54,8 +55,14 @@ class AssetsService extends MethodeService {
             const manufacturer = manufacturers.find(m => m.id === assetFiche.manufacturers_id) ?? null;
             const location = locations.find(l => l.id === assetFiche.locations_id) ?? null;
             const itemState = itemStates.find(is => is.id === assetFiche.states_id) ?? null;
+            const documents = await documentService.getByIdItem(assetFiche.id);
+            const idDocumentFirst = documents.length > 0 ? documents[0].id : null;
+            const image = idDocumentFirst ? await documentService.getImageById(idDocumentFirst) : null;
             if (itemType) {
                 assetFiche.item_type = itemType;
+            }
+            if (image) {
+                assetFiche.image = URL.createObjectURL(image);
             }
             assetFiche.item_model = itemModel;
             assetFiche.item_state = itemState;
@@ -64,9 +71,9 @@ class AssetsService extends MethodeService {
             assetFiche.location = location;
         }
         if (assetFicheFilter) {
-            assetFiches = (assetFicheFilter.user_name ? assetFiches.filter(a => a.user?.name?.includes (assetFicheFilter.user_name ?? '')) : assetFiches);
-            assetFiches = (assetFicheFilter.name ? assetFiches.filter(a => a.name?.includes (assetFicheFilter.name ?? '')) : assetFiches);
-            assetFiches = assetFicheFilter.item_type ? assetFiches.filter(a => a.item_type.includes (assetFicheFilter.item_type ?? '')) : assetFiches;
+            assetFiches = (assetFicheFilter.user_name ? assetFiches.filter(a => a.user?.name?.includes(assetFicheFilter.user_name ?? '')) : assetFiches);
+            assetFiches = (assetFicheFilter.name ? assetFiches.filter(a => a.name?.includes(assetFicheFilter.name ?? '')) : assetFiches);
+            assetFiches = assetFicheFilter.item_type ? assetFiches.filter(a => a.item_type.includes(assetFicheFilter.item_type ?? '')) : assetFiches;
             // assetFiches = assetFicheFilter.manufacturer_name ? assetFiches.filter(a => a.manufacturer?.name === assetFicheFilter.man ufacturer_name) : assetFiches;
 
             //  assetFiches = assetFicheFilter.model_name ?  assetFiches.filter (a => a.item_model?.name ===  assetFicheFilter.model_name) : assetFiches;
@@ -74,6 +81,10 @@ class AssetsService extends MethodeService {
             // assetFiches = assetFicheFilter.localistaion_name ? assetFiches.filter(a => a.location?.name === assetFicheFilter.localistaion_name) : assetFiches;
         }
         return assetFiches;
+    }
+
+    async getDocumentsById(id: number): Promise<IDocument[]> {
+        return await documentService.getByIdItem(id);
     }
 
     async getByIdTicket(idTicket: number): Promise<IAsset[]> {
@@ -132,6 +143,10 @@ class AssetsService extends MethodeService {
                 manufacturers_id: idManufacturer,
                 otherserial: assetImport.inventory_number,
                 users_id: idUser,
+            }
+            if (itemType.toLowerCase () === "dcroom"){
+                tempAsset["vis_rows"] = 1;
+                tempAsset["vis_cols"] = 1;
             }
             const modelItemKey = `${itemType.toLowerCase()}models_id`;
             tempAsset[modelItemKey] = idModel;

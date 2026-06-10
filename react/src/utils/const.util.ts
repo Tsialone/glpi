@@ -12,25 +12,33 @@ export const ITEM_NO_MODEL = [
     "Item_DeviceSimcard",
     "Software",
     "CartridgeItem",
-    "ConsumableItem"
+    "ConsumableItem",
+    "Database",
+    "DCRoom"
 ];
 
 export const ITEM_TYPE = [
-    "Computer",           // Ordinateurs
-    "Monitor",            // Moniteurs
-    "NetworkEquipment",   // Matériels réseau
-    "Peripheral",         // Périphériques
-    "Printer",            // Imprimantes
-    "Phone",              // Téléphones
-    "Rack",               // Baies
-    "Enclosure",          // Boîtiers
-    "PDU",                // PDU
+    // ticket
+    "Computer",           // Ordinateurs >>>ticket
+    "Monitor",            // Moniteurs >>>ticket
+    "NetworkEquipment",   // Matériels réseau >>>ticket
+    "Peripheral",         // Périphériques >>>ticket
+    "Printer",            // Imprimantes >>>ticket
+    "Phone",              // Téléphones >>>ticket
+    "Rack",               // Baies >>>ticket
+    "Enclosure",          // Boîtiers >>>ticket
+    "DCRoom", // >>>ticket
+    "Database", // >>>ticket
+    "Software",           // Logiciels >>>ticket
+
+    // autres
     "PassiveDCEquipment",
-    "Software",           // Logiciels
-    "CartridgeItem",      // Cartouches
-    "ConsumableItem",     // Consommables
+    "PDU",                // PDU
+    "CartridgeItem",      // Cartouches 
+    "ConsumableItem",     // Consommables 
     "Item_DeviceSimcard",
-    "Cable",              // Câbles
+    "Cable",              // Câbles 
+
 ];
 
 
@@ -38,7 +46,8 @@ export const ITEM_TYPE = [
 export const UTIL_CONST = {
     token: "session_token",
     user: "user",
-    item_type:"item_type"
+    item_type: "item_type",
+    ticket_position: "ticket_position"
 }
 
 
@@ -58,13 +67,24 @@ export const REVERSE_TICKET_PRIORITY = Object.fromEntries(
 export const APP_TOKEN = "hNE8bhiYYknj5A0UpOg93S2O16RPSbv0jxRukRUD";
 export const TICKET_STATUS = {
     1: "new",
-    2: "processing (assigned)",
-    3: "processing (planned)",
+    // 2: "processing (assigned)",
+    2: "assigned",
+    // 3: "processing (planned)",
+    3: "planned",
     4: "pending",
     5: "solved",
     6: "closed",
     10: "approval"
 };
+
+export const TICKET_VALIDATION_STATUS = {
+    1: "waiting",
+    2: "refused",
+    3: "granted"
+}
+export const REVERSE_TICKET_VALIDATION_STATUS = Object.fromEntries(
+    Object.entries(TICKET_VALIDATION_STATUS).map(([key, value]) => [value, Number(key)])
+);
 
 export const REVERSE_TICKET_STATUS = Object.fromEntries(
     Object.entries(TICKET_STATUS).map(([key, value]) => [value, Number(key)])

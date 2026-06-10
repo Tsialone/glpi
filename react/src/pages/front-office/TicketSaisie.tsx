@@ -1,14 +1,17 @@
 import React, { useRef, useState, type JSX } from "react";
 import type { ITicket } from "../../types/ticket";
-import { ITEM_TYPE, REVERSE_TICKET_PRIORITY, REVERSE_TICKET_STATUS, REVERSE_TICKET_TYPES, TICKET_PRIORITY } from "../../utils";
+import { ITEM_TYPE, REVERSE_TICKET_PRIORITY, REVERSE_TICKET_STATUS, REVERSE_TICKET_TYPES, TICKET_PRIORITY, TICKET_STATUS } from "../../utils";
 import type { IItemTicket } from "../../types/item-ticket";
-import { el } from "date-fns/locale";
 import type { IAsset } from "../../types/assets";
 import { assetsService } from "../../services/assets.service";
 import { ticketService } from "../../services/ticket.service";
 import { itemTicketService } from "../../services/item-ticket.service";
+interface TicketSaisieProps {
+    id_status?: number,
+    handleClose?: (idTicket:number) => Promise<void>
+}
+export default function TicketSaisie(props?: TicketSaisieProps) {
 
-export default function TicketSaisie() {
     const [ticket, setTicket] = useState<Partial<ITicket>>({});
     const [itemTicket, setItemTicket] = useState<Partial<IItemTicket | undefined>>();
     const [assets, setAssets] = useState<IAsset[]>([]);
@@ -25,11 +28,15 @@ export default function TicketSaisie() {
                 itemTicketService.create(itemTicket);
             }
         }
+        if (props?.handleClose && resp?.id) {
+           await props.handleClose(resp.id);
+        }
 
     }
     async function handleItemTicketChange(e: React.ChangeEvent<HTMLSelectElement>) {
         const { value } = e.target;
         const respAssets = await assetsService.getAll(value);
+        // console.log (respAssets);
         setAssets(respAssets);
         setItemTicket({ itemtype: value });
     }
@@ -47,6 +54,7 @@ export default function TicketSaisie() {
             mapItemName.current[a.id] = a.name ?? String(a.id)
         });
 
+        console.log(itemTicket)
         elements.push(
             <div key="item-select-container" className="d-flex gap-3 align-items-center mt-3">
                 <div className="flex-grow-1">
@@ -70,9 +78,10 @@ export default function TicketSaisie() {
         return elements;
     }
     return (
-        <div className="container-fluid p-4 min-vh-100 bg-dark text-white">
+        // className="container-fluid p-4 min-vh-100 bg-dark text-white"
+        <div >
             <div className="row justify-content-center">
-                <div className="col-lg-8 col-xl-6">
+                <div className="col-12">
                     <div className="card bg-dark text-white border-secondary shadow-lg" data-bs-theme="dark">
                         <div className="card-header border-secondary py-3">
                             <h4 className="mb-0 text-info">Saisie d'un nouveau ticket</h4>
@@ -129,6 +138,7 @@ export default function TicketSaisie() {
                                     <select
                                         className="form-select bg-dark text-white border-secondary"
                                         onChange={(e) => setTicket({ ...ticket, status: Number(e.target.value) })}
+                                        value={props?.id_status}
                                     >
                                         <option value="">-- Choisir un statut --</option>
                                         {Object.entries(REVERSE_TICKET_STATUS).map(([key, value]) => (
