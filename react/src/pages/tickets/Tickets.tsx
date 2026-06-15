@@ -50,7 +50,8 @@ export function Tickets() {
                             <th scope="col" className="py-3">Titre</th>
                             <th scope="col" className="py-3">Statut</th>
                             <th scope="col" className="py-3">Dernière mise à jour</th>
-                            <th scope="col" className="py-3">Date de création</th>
+                            {/* <th scope="col" className="py-3">Date de création</th> */}
+                            <th scope="col" className="py-3">Date d'ouverture</th>
                             <th scope="col" className="py-3">Priorité</th>
                         </tr>
                     </thead>
@@ -69,7 +70,8 @@ export function Tickets() {
                                     </span>
                                 </td>
                                 <td>{t.date_mod}</td>
-                                <td>{t.date_creation}</td>
+                                {/* <td>{t.date_creation}</td> */}
+                                <td>{t.date}</td>
                                 <td>
                                     <span className="badge border border-light text-light px-2 py-1">
                                         {(TICKET_PRIORITY as Record<number, string>)[t.priority] || "Inconnu"}

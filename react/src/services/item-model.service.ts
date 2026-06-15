@@ -26,16 +26,16 @@ class ItemModelService extends MethodeService {
     }
     async getAll<T extends IItemModel = IItemModel>(itemType?: string): Promise<T[]> {
         if (itemType) {
-            if (!ITEM_NO_MODEL.includes(itemType)) {
+            // if (!ITEM_NO_MODEL.includes(itemType)) {
                 return await this.get<T[]>(`${itemType}Model`);
-            }
+            // }
             return [];
         } else {
             const promises = ITEM_TYPE.map(it => {
-                if (!ITEM_NO_MODEL.includes(it)) {
+                // if (!ITEM_NO_MODEL.includes(it)) {
                     return this.get<T[]>(`${it}Model`)
-                }
-                return [];
+                // }
+                // return [];
             });
             const results = await Promise.all(promises);
             return results.flat();
@@ -60,17 +60,17 @@ class ItemModelService extends MethodeService {
 
     async purge(itemType?: string) {
         if (itemType) {
-            if (!ITEM_NO_MODEL.includes(itemType)) {
+            // if (!ITEM_NO_MODEL.includes(itemType)) {
                 const ids = (await this.getAll(itemType)).map(o => o.id);
                 return await this.reset(`${itemType}Model`, ids);
-            }
+            // }
         }
         else {
             ITEM_TYPE.map(async it => {
-                if (!ITEM_NO_MODEL.includes(it)) {
+                // if (!ITEM_NO_MODEL.includes(it)) {
                     const ids = (await this.getAll(it)).map(o => o.id);
                     return await this.reset(`${it}Model`, ids);
-                }
+                // }
 
             })
         }

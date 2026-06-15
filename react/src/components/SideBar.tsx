@@ -60,6 +60,18 @@ export default function SideBar({ isOpen = true, onClose }: SideBarProps) {
                     </Link>
                 </li>
                 <li className="nav-item mb-1">
+                    <Link to="/backoffice/admin/status-color" className="nav-link text-white">
+                        <i className="bi bi-download me-2"></i>
+                        Status color
+                    </Link>
+                </li>
+                  <li className="nav-item mb-1">
+                    <Link to="/backoffice/admin/status-lang" className="nav-link text-white">
+                        <i className="bi bi-download me-2"></i>
+                        Status lang
+                    </Link>
+                </li>
+                <li className="nav-item mb-1">
                     <Link to="/backoffice/admin/ticket" className="nav-link text-white">
                         <i className="bi bi-download me-2"></i>
                         Tickets

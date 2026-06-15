@@ -20,4 +20,7 @@ export interface ITicketValidation {
     timeline_position: number;
     last_reminder_date: string | null;
     links?: ITicketValidationLink[];
+
+    //
+    super_cost?:number;
 }

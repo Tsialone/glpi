@@ -315,7 +315,7 @@ export default function Import() {
 
                     {/* OPTION ET BOUTONS */}
                     <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
-                        <div className="form-check">
+                        {/* <div className="form-check">
                             <input
                                 type="checkbox"
                                 className="form-check-input bg-dark border-secondary"
@@ -326,12 +326,12 @@ export default function Import() {
                             <label className="form-check-label user-select-none text-light" htmlFor="ignoreImagesCheck">
                                 Ne pas importer les images
                             </label>
-                        </div>
+                        </div> */}
 
                         <div className="d-flex gap-2">
-                            <button className="btn btn-secondary px-4" onClick={() => doPost()}>
+                            {/* <button className="btn btn-secondary px-4" onClick={() => doPost()}>
                                 Post
-                            </button>
+                            </button> */}
                             <button className="btn btn-primary px-4" onClick={() => handleImport()}>
                                 Importer
                             </button>

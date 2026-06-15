@@ -8,6 +8,10 @@ import { GlpiPicturesService } from './glpi-pictures/glpi-pictures.service';
 import { TicketHistoryModule } from './ticket-history/ticket-history.module';
 import { ActionModule } from './action/action.module';
 import { StatusColorsModule } from './status-colors/status-colors.module';
+import { StatusLangModule } from './status-lang/status-lang.module';
+import { TicketCostModule } from './ticket-cost/ticket-cost.module';
+import { OpenCostModule } from './open_cost/open_cost.module';
+import { SpecialCostModule } from './special-cost/special-cost.module';
 
 @Module({
   imports: [
@@ -17,6 +21,10 @@ import { StatusColorsModule } from './status-colors/status-colors.module';
     TicketHistoryModule,
     ActionModule,
     StatusColorsModule,
+    StatusLangModule,
+    TicketCostModule,
+    OpenCostModule,
+    SpecialCostModule,
   ],
   controllers: [GlpiPicturesController],
   providers: [GlpiPicturesService],

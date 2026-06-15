@@ -28,6 +28,8 @@ export interface IAsset {
     uuid: string | null;
     comment: string | null;
     otherserial: string | null;
+
+    type?:string;
 }
 
 export interface IComputer extends IAsset {

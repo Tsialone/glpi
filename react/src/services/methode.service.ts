@@ -47,9 +47,9 @@ export class MethodeService {
         await Promise.all(promises);
     }
 
-    async post<T = any>(endPoint: string, body: T) {
+    async post<T = any>(endPoint: string, body: T, inputBody: boolean = true) {
         try {
-            const realBody = { "input": body };
+            const realBody = inputBody ? { "input": body } : body;
             const result = await this.defaultApiClient.post(endPoint, realBody);
             return result.data;
         } catch (error: any) {
@@ -77,16 +77,16 @@ export class MethodeService {
         }
     }
 
-    async patch<T = any>(endPoint: string, body: T) {
+    async patch<T = any>(endPoint: string, body: T, inputBody: boolean = true) {
         try {
-            const realBody = { "input": body };
+            const realBody = inputBody ? { "input": body } : body;
             const result = await this.defaultApiClient.patch(endPoint, realBody);
             return result.data;
         } catch (error: any) {
             if (error.response?.data) {
                 const data = error?.response?.data
                 console.error("erreur: ", data?.message);
-                throw new Error(data.message);
+                throw new Error(data.message ?? `erreur de patch sur ${endPoint} pour ${body} `);
             }
             throw error;
         }
