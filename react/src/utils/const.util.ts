@@ -8,36 +8,36 @@ export const nestBaseUrl = "http://localhost:3000/api";
 
 
 export const ITEM_NO_MODEL = [
-    "Cable",
-    "Item_DeviceSimcard",
-    "Software",
-    "CartridgeItem",
-    "ConsumableItem",
-    "Database",
-    "DCRoom"
+    // "Cable",
+    // "Item_DeviceSimcard",
+    // "Software",
+    // "CartridgeItem",
+    // "ConsumableItem",
+    // "Database",
+    // "DCRoom"
 ];
 
 export const ITEM_TYPE = [
     // ticket
     "Computer",           // Ordinateurs >>>ticket
     "Monitor",            // Moniteurs >>>ticket
-    "NetworkEquipment",   // Matériels réseau >>>ticket
-    "Peripheral",         // Périphériques >>>ticket
-    "Printer",            // Imprimantes >>>ticket
+    // "NetworkEquipment",   // Matériels réseau >>>ticket
+    // "Peripheral",         // Périphériques >>>ticket
+    // "Printer",            // Imprimantes >>>ticket
     "Phone",              // Téléphones >>>ticket
-    "Rack",               // Baies >>>ticket
-    "Enclosure",          // Boîtiers >>>ticket
-    "DCRoom", // >>>ticket
-    "Database", // >>>ticket
-    "Software",           // Logiciels >>>ticket
+    // "Rack",               // Baies >>>ticket
+    // "Enclosure",          // Boîtiers >>>ticket
+    // "DCRoom", // >>>ticket
+    // "Database", // >>>ticket
+    // "Software",           // Logiciels >>>ticket
 
     // autres
-    "PassiveDCEquipment",
-    "PDU",                // PDU
-    "CartridgeItem",      // Cartouches 
-    "ConsumableItem",     // Consommables 
-    "Item_DeviceSimcard",
-    "Cable",              // Câbles 
+    // "PassiveDCEquipment",
+    // "PDU",                // PDU
+    // "CartridgeItem",      // Cartouches 
+    // "ConsumableItem",     // Consommables 
+    // "Item_DeviceSimcard",
+    // "Cable",              // Câbles 
 
 ];
 
@@ -47,7 +47,8 @@ export const UTIL_CONST = {
     token: "session_token",
     user: "user",
     item_type: "item_type",
-    ticket_position: "ticket_position"
+    ticket_position: "ticket_position",
+    lang: "lang"
 }
 
 
@@ -68,13 +69,19 @@ export const APP_TOKEN = "hNE8bhiYYknj5A0UpOg93S2O16RPSbv0jxRukRUD";
 export const TICKET_STATUS = {
     1: "new",
     // 2: "processing (assigned)",
-    2: "assigned",
+    2: "in progress (assigned)",
     // 3: "processing (planned)",
     3: "planned",
     4: "pending",
     5: "solved",
     6: "closed",
     10: "approval"
+};
+
+export const TICKET_STATUS_KEY = {
+    New: "new",
+    Assigned: "in progress (assigned)",
+    Closed: "closed"
 };
 
 export const TICKET_VALIDATION_STATUS = {

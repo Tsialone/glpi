@@ -2,13 +2,58 @@ import { DateTime } from "luxon";
 import type { ITicketImport } from "../types/import/tickets-import";
 import type { ITicket, ITicketFiche, ITicketKnabanPosition } from "../types/ticket";
 import { MethodeService } from "./methode.service";
-import { REVERSE_TICKET_PRIORITY, REVERSE_TICKET_STATUS, REVERSE_TICKET_TYPES, TICKET_STATUS, TICKET_TYPES, UTIL_CONST } from "../utils";
+import { REVERSE_TICKET_PRIORITY, REVERSE_TICKET_STATUS, REVERSE_TICKET_TYPES, TICKET_STATUS, TICKET_STATUS_KEY, UTIL_CONST } from "../utils";
 import { assetsService } from "./assets.service";
 import { ticketCostService } from "./ticket-cost.service";
+import { itemTicketService } from "./item-ticket.service";
 
 class TicketService extends MethodeService {
     private endpoint = "Ticket";
 
+    async getGlpiCostById(id: number) {
+        const hisItems = (await this.getItemsById(id));
+        const totalItem = hisItems.length > 0 ? hisItems.length : 1;
+        const totalCost = await this.getTotalCostById(id);
+        return totalCost / totalItem;
+    }
+    async getByItemType(itemType: string): Promise<ITicket[]> {
+        const itemTickets = await itemTicketService.getAll();
+        const resp: ITicket[] = [];
+        const assets = await assetsService.getAll();
+        const respTicket = await ticketService.getAll();
+        for (const itemTicket of itemTickets) {
+            const asset = assets.find(a => a.id === itemTicket.items_id) ?? null;
+
+            if (asset?.type === itemType) {
+                const tempTicket = respTicket.find(t => t.id === itemTicket.tickets_id);
+                if (tempTicket) {
+                    resp.push(tempTicket);
+                }
+            }
+        }
+        return resp;
+    }
+  
+
+   
+    async getTotalCostById(idticket: number) {
+        const ticketCosts = await ticketService.getTicketFicheById(idticket);
+        let respTotal = 0;
+        ticketCosts.ticket_costs.map((tc, index) => {
+            const cTime = Number(String(tc.cost_time || 0).replace(',', '.'));
+            const cFixed = Number(String(tc.cost_fixed || 0).replace(',', '.'));
+            const cMaterial = Number(String(tc.cost_material || 0).replace(',', '.'));
+            const actionTime = Number(String(tc.actiontime || 0).replace(',', '.'));
+            const actionCost = (actionTime / 3600) * cTime;
+            const total = actionCost + cFixed + cMaterial;
+            respTotal += total;
+        }
+        );
+        return respTotal;
+    }
+    getTicketStatusKeyBydId(idStatus: number) {
+        return (TICKET_STATUS as Record<number, string>)[idStatus] || "Inconnu";
+    }
 
     removePositionByStorage(idTicket: number, fromtype: string) {
         const storage = localStorage.getItem(UTIL_CONST.ticket_position)!;
@@ -30,22 +75,23 @@ class TicketService extends MethodeService {
         map[fromtype] = fromPositions;
         localStorage.setItem(UTIL_CONST.ticket_position, JSON.stringify(map));
     }
-    addPositionByStorage(idTicket: number, toType: string, newPosition?: number) {
+    addPositionByStorage(idTicket: number, toType: string, newPosition: number | null) {
         const storage = localStorage.getItem(UTIL_CONST.ticket_position)!;
         const map: Record<string, ITicketKnabanPosition[]> = JSON.parse(storage);
         const toPositions = map[toType];
         const tempToPositions = [...toPositions];
-        if (newPosition) {
+        if (newPosition != null) {
             for (const p of tempToPositions) {
                 if (p.position >= newPosition) {
                     p.position += 1;
-                    // console.log("modification: >>>: ", p.position);
+                    console.log("modification: >>>: ", p.position);
                 }
 
             }
             tempToPositions.push({ id_ticket: idTicket, position: newPosition });
         }
         else {
+            console.log("pas de newPosition: ", newPosition);
             tempToPositions.push({ id_ticket: idTicket, position: toPositions.length });
         }
 
@@ -89,6 +135,7 @@ class TicketService extends MethodeService {
             if (!Object.hasOwn(REVERSE_TICKET_STATUS, ticketStatus)) continue;
 
             const element = REVERSE_TICKET_STATUS[ticketStatus];
+            if (![1, 2, 6].includes(element)) continue;
             const ticketFilterd = tickets.filter(t => t.status === element);
             resp[ticketStatus] = ticketFilterd.length;
         }
@@ -107,6 +154,8 @@ class TicketService extends MethodeService {
         ticket.items = items;
         ticket.ticket_costs = ticketCosts;
 
+        // console.log ("encule: " , ticket);
+
 
         return ticket;
     }
@@ -117,6 +166,7 @@ class TicketService extends MethodeService {
             console.log(REVERSE_TICKET_TYPES);
             if (!Object.hasOwn(REVERSE_TICKET_TYPES, ticketType)) continue;
             const element = REVERSE_TICKET_TYPES[ticketType];
+
             console.log(element, " : ", ticketType);
             const ticketByType = tickets.filter(t => t.type === element);
             resp[ticketType] = ticketByType.length;
@@ -133,7 +183,7 @@ class TicketService extends MethodeService {
                 type: REVERSE_TICKET_TYPES[ticketImport.type],
                 name: ticketImport.titre,
                 content: ticketImport.description,
-                status: REVERSE_TICKET_STATUS["new"],
+                status: REVERSE_TICKET_STATUS[TICKET_STATUS_KEY.New],
                 priority: REVERSE_TICKET_PRIORITY[ticketImport.priority.toLowerCase()],
                 externalid: ticketImport.ref_ticket
             }

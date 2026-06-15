@@ -74,3 +74,22 @@ export default defineConfig([
 
 
         <div className="container-fluid p-4 min-vh-100 bg-dark text-white">
+
+
+
+
+
+<button onclick="verifierChoix()">Cliquez ici</button>
+
+<script>
+function verifierChoix() {
+    // Affiche la boîte de dialogue (OK renvoie true, Annuler renvoie false)
+    if (confirm("Voulez-vous continuer ?")) {
+        alert("Vous avez cliqué sur OK !");
+        // Votre code si OK
+    } else {
+        alert("Action annulée.");
+        return; // Arrête l'exécution ici
+    }
+}
+</script>

@@ -3,14 +3,12 @@ import csv
 import random
 
 item_types = [
-    "Computer", "Monitor", "NetworkEquipment", "Peripheral", 
-    "Printer", "Phone", "Rack", "Enclosure", "DCRoom", 
-    "Database", "Software"
+    "Computer", "Monitor", "Phone"
 ]
 
 statuses = ["En production", "Maintenance", "En panne", "En stock"]
 locations = ["Administration", "Comptabilité", "Laboratoire IA", "Bibliothèque", "Magasin Informatique", "Salle 301", "Salle Serveur", "Baie 1"]
-users = ["Rakoto Jean", "Rasoanaivo Marie", "Rakotondranaivo Paul", "Rabe Hanitra", "ITU Labs", "Bibliothèque", "Rakoto Michel"]
+users = ["Rakoto Jean", "Rasoanaivo Marie", "Rakotondranaivo Paul", "Rabe Hanitra", "ITU Labs", "Bibliothèque", "Rakoto Michel", "", "", ""]
 manufacturers = ["Dell", "HP", "Lenovo", "Cisco", "Logitech", "Epson", "APC", "Microsoft", "Adobe", "Oracle"]
 
 # Dictionnaires de modèles pour ce qui les supporte
@@ -31,8 +29,19 @@ with open("test-import/asset.csv", mode="w", newline="", encoding="utf-8") as fi
     writer = csv.writer(file)
     writer.writerow(["Name", "Status", "Location", "Manufacturer", "Item_Type", "Model", "Inventory_Number", "User"])
     
-    for i in range(1, 301): # 300 assets pour tester la pagination et les gros volumes
-        item_type = random.choice(item_types)
+    # Préparation d'une liste aléatoire mais qui garantit au moins 1 de chaque type
+    generated_types = item_types.copy()
+    generated_types += random.choices(item_types, k=9)
+    generated_types.append("Monitor") # L'ajout spécifique du Monitor
+    random.shuffle(generated_types)
+    
+    # Même chose pour les status (il faut 13 éléments maintenant)
+    generated_statuses = statuses.copy()
+    generated_statuses += random.choices(statuses, k=9)
+    random.shuffle(generated_statuses)
+    
+    for i in range(1, 14): # 13 assets
+        item_type = generated_types[i-1]
         
         # Initialiser avec des valeurs vides
         name = f"{item_type[:3].upper()}-TEST-{i:04d}"
@@ -45,7 +54,7 @@ with open("test-import/asset.csv", mode="w", newline="", encoding="utf-8") as fi
         
         # 1. IT Assets (Supportent tout)
         if item_type in ["Computer", "Monitor", "NetworkEquipment", "Peripheral", "Printer", "Phone"]:
-            status = random.choice(statuses)
+            status = generated_statuses[i-1]
             location = random.choice(locations)
             manufacturer = random.choice(manufacturers)
             model = random.choice(models_dict[item_type])
@@ -74,4 +83,4 @@ with open("test-import/asset.csv", mode="w", newline="", encoding="utf-8") as fi
         cmd = f'convert -size 400x300 xc:lightgray -font Arial -pointsize 30 -gravity center -draw "text 0,0 \'{name}\\n{item_type}\'" "{img_name}"'
         os.system(cmd)
 
-print("Génération de 100 assets avec respect strict des champs supportés par chaque type.")
+print("Génération d'une dizaine d'assets avec respect strict des champs supportés par chaque type.")

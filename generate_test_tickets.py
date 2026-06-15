@@ -22,7 +22,7 @@ if not asset_names:
 
 # Listes de données factices pour les tickets
 types = ["Incident", "Request"]
-statuses = ["New", "Assigned", "Planned", "Pending", "Solved", "Closed"]
+statuses = ["New", "In progress (assigned)", "Closed"]
 priorities = ["Low", "Medium", "High", "Very High"]
 
 # Mix de français et malgache pour les titres et descriptions, pour coller à l'exemple
@@ -58,13 +58,21 @@ def random_date(start_date, end_date):
 start_date = datetime.strptime("01/01/2026", "%d/%m/%Y")
 end_date = datetime.strptime("30/06/2026", "%d/%m/%Y")
 
-num_tickets = 400
+num_tickets = 15
 
 with open("test-import/ticket.csv", mode="w", newline="", encoding="utf-8") as file:
     # Paramétrage pour forcer les guillemets (QUOTE_MINIMAL suffit si on met un JSON string)
     writer = csv.writer(file, quoting=csv.QUOTE_MINIMAL)
     writer.writerow(["Ref_Ticket", "Date", "Heure", "Type", "Titre", "Description", "Status", "Priority", "Items"])
     
+    # 1. Répartition des statuts (5 Closed, 3 New, 7 In progress)
+    generated_statuses = ["Closed"]*5 + ["New"]*3 + ["In progress (assigned)"]*7
+    random.shuffle(generated_statuses)
+    
+    # 2. Répartition du nombre d'équipements liés (4 tickets vides, et le reste au hasard entre 1 et 3)
+    generated_item_counts = [0]*4 + [1]*5 + [2]*4 + [3]*2
+    random.shuffle(generated_item_counts)
+
     for i in range(1, num_tickets + 1):
         ticket_type = random.choice(types)
         
@@ -82,11 +90,11 @@ with open("test-import/ticket.csv", mode="w", newline="", encoding="utf-8") as f
         
         heure_str = f"{random.randint(8, 17):02d}:{random.randint(0, 59):02d}"
         
-        status = random.choice(statuses)
+        status = generated_statuses[i-1]
         priority = random.choice(priorities)
         
-        # Choix de 1 à 3 assets liés (souvent 1, parfois 2 ou 3)
-        num_items = random.choices([1, 2, 3], weights=[80, 15, 5])[0]
+        # Choix cohérent du nombre d'assets liés
+        num_items = generated_item_counts[i-1]
         linked_assets = random.sample(asset_names, num_items)
         
         # Le format attendu par le CSV est une chaîne JSON : ["PC-ADM-001", "MN-FORM-002"]

@@ -25,7 +25,9 @@ class ItemTicketService extends MethodeService {
             console.log ("items a inséré: " , itemFiltreds.map (i => i.name));
             if (idTicket === null) throw new Error(`Ticket introuvable: ${ticketImport.ref_ticket}`)
             for (const itemFiltred of itemFiltreds) {
-                const itemType = await assetsService.getItempTypeById(itemFiltred.id);
+                // const itemType = await assetsService.getItempTypeById(itemFiltred.id);
+                const itemType = itemFiltred.type;
+
                 if (itemType === null) throw new Error(`Item pas de ItemType: ${itemFiltred.name}`)
                 const itemTicket: Partial<IItemTicket> = {
                     itemtype: itemType,

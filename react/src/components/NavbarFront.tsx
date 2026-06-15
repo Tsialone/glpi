@@ -68,12 +68,20 @@ export default function NavBarFront() {
                                 <i className="bi bi-cart3 me-1"></i>Nouveau ticket
                             </Link>
                         </li>
-                         <li className="nav-item">
+                        <li className="nav-item">
                             <Link
                                 to="/frontoffice/ticket-status"
                                 className="btn btn-sm px-3 rounded-pill transition-all btn-outline-secondary"
                             >
                                 <i className="bi bi-cart3 me-1"></i>Status ticket
+                            </Link>
+                        </li>
+                        <li className="nav-item">
+                            <Link
+                                to="/frontoffice/itemType-cost"
+                                className="btn btn-sm px-3 rounded-pill transition-all btn-outline-secondary"
+                            >
+                                <i className="bi bi-cart3 me-1"></i>Item Type Cost
                             </Link>
                         </li>
 

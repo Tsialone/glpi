@@ -80,7 +80,7 @@ export function Table<T>({
                             ))
                         ) : (
                             <tr>
-                                <td colSpan={columns.length} className="text-center py-5 text-muted">
+                                <td colSpan={columns.length} className="text-center text-light py-5">
                                     {emptyMessage}
                                 </td>
                             </tr>

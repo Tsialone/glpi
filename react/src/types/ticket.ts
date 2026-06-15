@@ -54,8 +54,7 @@ export interface ITicket {
   links: ITicketLink[];
 
 
-  // for kanban
-  position?:number,
+ 
 }
 
 export  interface ITicketFiche extends ITicket {

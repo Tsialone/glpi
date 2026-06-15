@@ -20,29 +20,20 @@ if not ticket_refs:
 
 total_costs_generated = 0
 
-def hard_number(is_duration=False):
-    # Génère un nombre complexe, parfois entier, parfois très décimal, avec des virgules pour séparateur décimal
-    val = random.uniform(0.0, 15000.0)
+def logical_number(is_duration=False):
+    if is_duration:
+        # Durées logiques: 15m, 30m, 1h, 2h, 4h, 8h (en secondes)
+        return str(random.choice([900, 1800, 3600, 7200, 14400, 28800]))
     
-    # 20% de chances d'être 0
-    if random.random() < 0.2:
+    # 30% de chances d'être 0 pour les coûts
+    if random.random() < 0.3:
         return "0"
-    
-    # Choix aléatoire du nombre de décimales pour tester la robustesse du parseur
-    decimals = random.choice([0, 1, 2, 3, 4])
-    
-    if decimals == 0:
-        res = f"{int(val)}"
-    else:
-        # Formate avec le nombre de décimales choisi, et remplace le point par une virgule
-        fmt = f"{{:.{decimals}f}}"
-        res = fmt.format(val).replace(".", ",")
         
-    return res
+    # Coûts logiques entre 10 et 500, avec potentiellement 2 décimales propres
+    val = round(random.uniform(10.0, 500.0), 2)
+    return f"{val:.2f}".replace(".", ",")
 
 with open("test-import/ticket-cost.csv", mode="w", newline="", encoding="utf-8") as file:
-    # QUOTE_MINIMAL encapsulera automatiquement les champs avec virgules si nécessaire selon le dialecte
-    # Mais on va forcer l'ajout de guillemets pour les nombres décimaux (pour être vicieux et robuste)
     writer = csv.writer(file, quoting=csv.QUOTE_MINIMAL)
     writer.writerow(["Num_Ticket", "Duration_second", "Time_Cost", "Fixed_Cost"])
     
@@ -51,11 +42,11 @@ with open("test-import/ticket-cost.csv", mode="w", newline="", encoding="utf-8")
         num_costs = random.choices([1, 2, 3], weights=[30, 40, 30])[0]
         
         for _ in range(num_costs):
-            duration_str = hard_number(is_duration=True)
-            time_cost_str = hard_number()
-            fixed_cost_str = hard_number()
+            duration_str = logical_number(is_duration=True)
+            time_cost_str = logical_number()
+            fixed_cost_str = logical_number()
             
             writer.writerow([ref, duration_str, time_cost_str, fixed_cost_str])
             total_costs_generated += 1
 
-print(f"Génération 'Hardcore' de {total_costs_generated} coûts de tickets avec des virgules et des décimales tordues.")
+print(f"Génération cohérente et logique de {total_costs_generated} coûts de tickets.")

@@ -6,50 +6,94 @@ import { itemModelService } from "./item-model.service";
 import { itemStateService } from "./item-state.service";
 import { locationService } from "./location.service";
 import { manufacturerService } from "./manufacturer.service";
-import { ITEM_TYPE, UTIL_CONST } from "../utils";
+import { ITEM_TYPE } from "../utils";
 import { documentService } from "./document.service";
 import type { IDocumentItem } from "../types/document-item";
 import { documentItemService } from "./document-item.service";
-import type { ITicket } from "../types/ticket";
 import { itemTicketService } from "./item-ticket.service";
-import { use } from "react";
 import type { IDocument } from "../types/document";
+import { ticketService } from "./ticket.service";
+import { specialCostService } from "./nest/special-cost.service";
 
-
+export interface Super {
+    itemType: string,
+    glpiCost: number,
+    superCost: number,
+    openCost: number,
+    total: number
+}
 class AssetsService extends MethodeService {
+
+    async getGlpiCostByType(type: string) {
+        let total = 0;
+        const histTickets = await ticketService.getByItemType(type);
+        for (const histTicket of histTickets) {
+            total += await ticketService.getGlpiCostById(histTicket.id);
+        }
+        return total;
+    }
+
+    async getTable() {
+        const resp: Super[] = [];
+        const superCosts = await specialCostService.getSuperCost();
+        const openCosts = await specialCostService.getOpenCost();
+        const glpiCosts = await specialCostService.getGlpiCost ();
+
+        console.log (superCosts);
+        for (const type of ITEM_TYPE) {
+            const superCost = superCosts.find (sc => sc.item_type.toLowerCase ( ) ===  type.toLowerCase () )?.cost ?? 0;
+            const openCost = openCosts.find (sc => sc.item_type.toLowerCase ( ) ===  type.toLowerCase () )?.cost ?? 0;
+            const glpiCost = glpiCosts.find (sc => sc.item_type.toLowerCase ( ) ===  type.toLowerCase () )?.cost ?? 0;
+
+            // const [glpiCost] = await Promise.all([
+            //     this.getGlpiCostByType(type),
+            // ]);
+
+            // resp.push({ itemType: element, totalCost: totalCost, superCost: superCost, total: superCostGeneral, openCost: openCost })
+            const total = glpiCost + superCost + openCost;
+
+            // for (const ticket of hisTickets) {
+            // const temp = await ticketService.getTotalCostById(ticket.id);
+            // superCost += await superCostService.getTotalByIdTicket(ticket.id);
+            // }
+            // console.log("hisTickets: ", hisTickets, "itemType: ", element, " totalCost:", totalCost, " superCost: ", superCostGeneral);
+            resp.push({ itemType: type, glpiCost: glpiCost, superCost: superCost, openCost: openCost, total: total })
+        }
+        return resp;
+    }
 
     async getAllFiche<T extends IAssetFiche = IAssetFiche>(assetFicheFilter?: Partial<IAssetFicheFilter>, itemType?: string): Promise<T[]> {
         let assetFiches: T[] = [];
-        const [users, manufacturers, locations, itemStates] = await Promise.all([
+        const [users, manufacturers, locations, itemStates, itemModels] = await Promise.all([
             userService.getAll(),
             manufacturerService.getAll(),
             locationService.getAll(),
-            itemStateService.getAll()
+            itemStateService.getAll(),
+            itemModelService.getAll()
 
         ])
         if (itemType) {
-            assetFiches = await this.get<T[]>(itemType);
+            assetFiches = await this.getAll(itemType);
         }
         else {
-            const assetPromises = ITEM_TYPE.map(it => {
-                return this.get<T[]>(it);
-            });
-            const resp = (await Promise.all(assetPromises)).flat();
-            assetFiches = resp;
+            // const tempAssets =
+            // const resp = (await Promise.all(assetPromises)).flat();
+            assetFiches = await this.getAll();
         }
         // console.log (assetFiches);
         for (const assetFiche of assetFiches) {
-            const itemType = await this.getItempTypeById(assetFiche.id);
-            const modelKey = `${itemType?.toLowerCase()}models_id`;
+            console.log(assetFiche.type);
+            const ficheItemType = assetFiche.type;
+            const modelKey = `${ficheItemType?.toLowerCase()}models_id`;
             const tempAssetFiche = { ...assetFiche } as any;
             const idModel = tempAssetFiche[modelKey] ?? null;
-            const itemModel = itemType ? (await itemModelService.getAll(itemType)).find(im => {
+            const itemModel = ficheItemType ? itemModels.find(im => {
                 if (idModel) {
                     return im.id === idModel;
                 }
                 return false;
             }) ?? null : null;
-            // const itemType = "test";
+            // const ficheItemType = "test";
 
             const user = users.find(u => u.id === assetFiche.users_id) ?? null;
             const manufacturer = manufacturers.find(m => m.id === assetFiche.manufacturers_id) ?? null;
@@ -58,8 +102,8 @@ class AssetsService extends MethodeService {
             const documents = await documentService.getByIdItem(assetFiche.id);
             const idDocumentFirst = documents.length > 0 ? documents[0].id : null;
             const image = idDocumentFirst ? await documentService.getImageById(idDocumentFirst) : null;
-            if (itemType) {
-                assetFiche.item_type = itemType;
+            if (ficheItemType) {
+                assetFiche.item_type = ficheItemType;
             }
             if (image) {
                 assetFiche.image = URL.createObjectURL(image);
@@ -89,6 +133,7 @@ class AssetsService extends MethodeService {
 
     async getByIdTicket(idTicket: number): Promise<IAsset[]> {
         const itemTickets = await itemTicketService.getByIdTicket(idTicket);
+        // console.log ("xxx: " , itemTickets);
         const resp: IAsset[] = [];
         const assets = await this.getAll();
         for (const itemTicket of itemTickets) {
@@ -97,6 +142,7 @@ class AssetsService extends MethodeService {
                 resp.push(asset);
             }
         }
+        // console.log ("resp: " , resp);
         return resp;
     }
     async getDashBoardTotalParc(): Promise<Record<string, number>> {
@@ -144,7 +190,7 @@ class AssetsService extends MethodeService {
                 otherserial: assetImport.inventory_number,
                 users_id: idUser,
             }
-            if (itemType.toLowerCase () === "dcroom"){
+            if (itemType.toLowerCase() === "dcroom") {
                 tempAsset["vis_rows"] = 1;
                 tempAsset["vis_cols"] = 1;
             }
@@ -163,40 +209,56 @@ class AssetsService extends MethodeService {
 
 
     }
-    async getItempTypeById<T extends IAsset = IAsset>(idItem: number): Promise<string | null> {
-
-        if (!localStorage.getItem(UTIL_CONST.item_type)) {
-            localStorage.setItem(UTIL_CONST.item_type, JSON.stringify({}));
-        }
-        const storage = localStorage.getItem(UTIL_CONST.item_type)!;
-        const map = JSON.parse(storage);
-        if (map[idItem]) {
-            return map[idItem];
-        }
-        else {
-            for (const itemType of ITEM_TYPE) {
-                const items = await this.get<T[]>(itemType);
-                const item = items.find(i => i.id === idItem);
-                if (item) {
-                    map[idItem] = itemType;
-                    localStorage.setItem(UTIL_CONST.item_type, JSON.stringify(map));
-                    return itemType
-                };
-            }
+    async getItemTypeById<T extends IAsset = IAsset>(idItem: number): Promise<string | null> {
+        for (const itemType of ITEM_TYPE) {
+            const items = await this.get<T[]>(itemType);
+            const item = items.some(i => i.id === idItem);
+            if (item) {
+                return itemType
+            };
         }
         return null;
     }
+    // async getItemTypeById<T extends IAsset = IAsset>(idItem: number): Promise<string | null> {
+
+    //     if (!localStorage.getItem(UTIL_CONST.item_type)) {
+    //         localStorage.setItem(UTIL_CONST.item_type, JSON.stringify({}));
+    //     }
+    //     const storage = localStorage.getItem(UTIL_CONST.item_type)!;
+    //     const map = JSON.parse(storage);
+    //     if (map[idItem]) {
+    //         console.log("recherche dans map");
+    //         return map[idItem];
+    //     }
+    //     else {
+    //         console.log("recherche dans ailleurs");
+
+    //         for (const itemType of ITEM_TYPE) {
+    //             const items = await this.get<T[]>(itemType);
+    //             const item = items.some(i => i.id === idItem);
+    //             if (item) {
+    //                 map[idItem] = itemType;
+    //                 localStorage.setItem(UTIL_CONST.item_type, JSON.stringify(map));
+    //                 return itemType
+    //             };
+    //         }
+    //     }
+    //     return null;
+    // }
     async getAll<T extends IAsset = IAsset>(itemType?: string): Promise<T[]> {
         if (itemType) {
-            return await this.get<T[]>(itemType);
-        }
-        else {
-            const assetPromises = ITEM_TYPE.map(it => {
-                return this.get<T[]>(it);
-            });
-            const resp = (await Promise.all(assetPromises)).flat();
+            const resp = await this.get<T[]>(itemType);
+            resp.forEach(r => r.type = itemType);
             return resp;
+        } else {
+            const assetPromises = ITEM_TYPE.map(async (it) => {
+                const items = await this.get<T[]>(it);
+                items.forEach(t => t.type = it);
+                return items; // On retourne explicitement le tableau modifié
+            });
 
+            const resp = await Promise.all(assetPromises);
+            return resp.flat();
         }
     }
 

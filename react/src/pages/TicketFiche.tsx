@@ -52,8 +52,10 @@ export default function TicketFiche(props?: TicketFicheProps) {
                             <ul className="list-group list-group-flush rounded shadow-sm border border-secondary">
                                 {ticket.items.map((i, index) => (
                                     <li className="list-group-item bg-dark text-white border-secondary d-flex align-items-center" key={index}>
-                                        <span className="badge bg-info me-3 rounded-circle p-2"> </span>
-                                        <span className="fw-medium">{i.name}</span>
+                                        <span className="badge bg-info me-4 rounded-circle p-2"> </span>
+                                        <span className="fw-medium">{i.name} | {i.id}</span>
+                                        {/* <span className="fw-medium">{i.id}</span> */}
+
                                     </li>
                                 ))}
                             </ul>
@@ -181,7 +183,7 @@ export default function TicketFiche(props?: TicketFicheProps) {
 
                         <div className="d-flex justify-content-between align-items-end mt-4 pt-3 border-top border-secondary">
                             <div className="d-flex flex-column text">
-                                <small className="mb-1"><strong>Ouvert le :</strong> {ticket.date_creation || "-"}</small>
+                                <small className="mb-1"><strong>Ouvert le :</strong> {ticket.date || "-"}</small>
                                 <small><strong>Dernière modif :</strong> {ticket.date_mod || "-"}</small>
                             </div>
 

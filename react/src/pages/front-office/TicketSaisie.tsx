@@ -1,4 +1,4 @@
-import React, { useRef, useState, type JSX } from "react";
+import React, { useContext, useRef, useState, type JSX } from "react";
 import type { ITicket } from "../../types/ticket";
 import { ITEM_TYPE, REVERSE_TICKET_PRIORITY, REVERSE_TICKET_STATUS, REVERSE_TICKET_TYPES, TICKET_PRIORITY, TICKET_STATUS } from "../../utils";
 import type { IItemTicket } from "../../types/item-ticket";
@@ -6,9 +6,11 @@ import type { IAsset } from "../../types/assets";
 import { assetsService } from "../../services/assets.service";
 import { ticketService } from "../../services/ticket.service";
 import { itemTicketService } from "../../services/item-ticket.service";
+import { PopupContext } from "../../contexts/PopupContext";
+import { LoadingContext } from "../../contexts/Loading";
 interface TicketSaisieProps {
     id_status?: number,
-    handleClose?: (idTicket:number) => Promise<void>
+    handleClose?: (idTicket: number) => Promise<void>
 }
 export default function TicketSaisie(props?: TicketSaisieProps) {
 
@@ -17,20 +19,33 @@ export default function TicketSaisie(props?: TicketSaisieProps) {
     const [assets, setAssets] = useState<IAsset[]>([]);
     const [itemTickets, setItemTickets] = useState<Partial<IItemTicket>[]>([]);
     const mapItemName = useRef<Record<number, string>>({});
+    const { showPopup } = useContext(PopupContext)!;
+    const { setLoading } = useContext(LoadingContext)!;
     async function handleCreate() {
         console.log(ticket);
         console.log(itemTickets);
-        const resp = await ticketService.create(ticket);
-        if (resp?.id) {
-            const idTicket = resp.id;
-            for (const itemTicket of itemTickets) {
-                itemTicket.tickets_id = idTicket;
-                itemTicketService.create(itemTicket);
+        try {
+            setLoading (true);
+            const resp = await ticketService.create(ticket);
+            if (resp?.id) {
+                const idTicket = resp.id;
+                for (const itemTicket of itemTickets) {
+                    itemTicket.tickets_id = idTicket;
+                    itemTicketService.create(itemTicket);
+                }
             }
+            if (props?.handleClose && resp?.id) {
+                await props.handleClose(resp.id);
+            }
+            showPopup ("Ticket crée!!" , "success");
+
+        } catch (error) {
+            showPopup ((error as Error).message);
         }
-        if (props?.handleClose && resp?.id) {
-           await props.handleClose(resp.id);
+        finally {
+            setLoading (false);
         }
+
 
     }
     async function handleItemTicketChange(e: React.ChangeEvent<HTMLSelectElement>) {

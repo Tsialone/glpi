@@ -19,6 +19,9 @@ import TicketFiche from "./pages/TicketFiche";
 import Item from "./pages/front-office/Item";
 import TicketSaisie from "./pages/front-office/TicketSaisie";
 import TicketStatus from "./pages/front-office/TicketStatus";
+import StatusColor from "./pages/StatusColor";
+import StatusLang from "./pages/StatusLang";
+import ItemTypeCosts from "./pages/front-office/ItemTypeCosts";
 
 // Définition des composants de protection en dehors de App pour éviter la recréation à chaque render
 const ProtectedFrontOfficeceRoute = () => {
@@ -72,6 +75,11 @@ export function App() {
             <Route path="dashboard-parc" element={<DashBoardParc />} ></Route>
             <Route path="dashboard-ticket" element={<DashBoardTicket />} ></Route>
 
+            {/* config */}
+            <Route path="status-color" element={<StatusColor />} ></Route>
+            <Route path="status-lang" element={<StatusLang />} ></Route>
+
+
             <Route path="articles" element={<Article />} ></Route>
           </Route>
         </Route>
@@ -84,6 +92,7 @@ export function App() {
           <Route path="item" element={<Item />} ></Route>
           <Route path="ticket-saisie" element={<TicketSaisie />} ></Route>
           <Route path="ticket-status" element={<TicketStatus />} ></Route>
+          <Route path="itemType-cost" element={<ItemTypeCosts />} ></Route>
 
         </Route>
         {/* </Route> */}
